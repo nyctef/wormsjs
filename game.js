@@ -1,12 +1,16 @@
-(function() {
-
-  console.log('hi')
+var game = (function() {
 
   var canvas = document.getElementById('screen')
+  var canvasParent = canvas.parentNode
+  canvas.width = canvasParent.offsetWidth
+  canvas.height = canvasParent.offsetHeight
   var screen = canvas.getContext('2d')
-  var gameSize = { x: canvas.width, y: canvas.height }
 
-  console.log(gameSize)
+  var game = {}
+
+  game.size = { x: canvas.width, y: canvas.height }
+
+  console.log(game.size)
 
   // set up an fps counter
   var countFrame = (function() {
@@ -37,17 +41,69 @@
     return countFrame
   })()
 
-  var edgePixelData
-  
+  var Keyboarder = function() {
+    // based on https://vimeo.com/105955605
+    var keyState = {}
+
+    window.onkeydown = function(e) {
+      keyState[e.keyCode] = true
+    }
+
+    window.onkeyup = function(e) {
+      keyState[e.keyCode] = false
+    }
+
+    this.isDown = function(keyCode) {
+      return keyState[keyCode] === true
+    }
+
+    this.Keys = {
+      LEFT: 37,
+      RIGHT: 39,
+      SPACE: 32,
+    }
+  }
+
+  var Player = function() {
+    this.keyboarder = new Keyboarder(),
+    this.position = { x: 50, y: 50 }
+    this.draw = function(screen) {
+      drawCircle(screen, this.position.x, this.position.y, 5, 'green')
+    }
+    this.update = function() {
+      var newX
+      if (this.keyboarder.isDown(this.keyboarder.Keys.LEFT)) {
+        newX = this.position.x - 2
+      } else if (this.keyboarder.isDown(this.keyboarder.Keys.RIGHT)) {
+        newX = this.position.x + 2
+      } else {
+        return
+      }
+      if (!(game.edgePixelData)) {
+        return
+      }
+      var alpha = game.edgePixelData.data[(this.position.y * 4 * game.size.x) + (newX * 4) + 3]
+      if (alpha <= 0) {
+        this.position.x = newX
+      }
+    }
+  }
+
+  var player = new Player()
+
+  game.options = {
+    drawEdgePixelData: false
+  }
+
   function getEdgePixelData() {
     var R = 0
     var G = 1
     var B = 2
     var A = 3
-    var imageDataResult = screen.getImageData(0, 0, gameSize.x, gameSize.y)
+    var imageDataResult = screen.getImageData(0, 0, game.size.x, game.size.y)
     var imageData = imageDataResult.data
-    var pixelWidth = gameSize.x * 4
-    var pixelHeight = pixelWidth * gameSize.y
+    var pixelWidth = game.size.x * 4
+    var pixelHeight = pixelWidth * game.size.y
     for (var i=0; i<imageData.length; i+= 4) {
       if (imageData[i+A] == 0) continue
 
@@ -61,13 +117,13 @@
         // drawCircle functions)
         imageData[i+A] = 255
       }
-
     }
 
-    edgePixelData = imageDataResult
+    return imageDataResult
   }
 
   function update() {
+    player.update()
   }
 
   function drawCircle(screen, centerX, centerY, radius, fillStyle) {
@@ -81,31 +137,43 @@
   function eraseCircle(screen, centerX, centerY, radius) {
     var oldCompositeOperation = screen.globalCompositeOperation
     try {
-      screen.globalCompositeOperation = "destination-out"
+      screen.globalCompositeOperation = 'destination-out'
       drawCircle(screen, centerX, centerY, radius, 'rgba(0,0,0,1)')
     } finally {
       screen.globalCompositeOperation = oldCompositeOperation
     }
   }
 
-  function draw() {
+  function drawUpdate() {
+    screen.fillStyle = 'black'
     screen.fillRect(5, 5, 100, 100)
     eraseCircle(screen, 50, 50, 25)
-    getEdgePixelData()
-    screen.putImageData(edgePixelData, 0, 0)
+    game.edgePixelData = getEdgePixelData()
+  }
+
+  function draw() {
+    drawUpdate()
+
+    if (game.options.drawEdgePixelData) {
+      screen.putImageData(game.edgePixelData, 0, 0)
+    }
+
+    player.draw(screen)
   }
 
   // define main game loop
-  function loop() {
+  game.loop = function() {
     tdelta = countFrame()
 
     update()
     draw()
     
-    window.requestAnimationFrame(loop)
+    window.requestAnimationFrame(game.loop)
   }
 
   // start the game running
-  loop()
+  game.loop()
+
+  return game
 
 })()

@@ -51,18 +51,15 @@
     for (var i=0; i<imageData.length; i+= 4) {
       if (imageData[i+A] == 0) continue
 
-      if (i > pixelWidth &&
-          imageData[i-pixelWidth+A] == 0) {
+      if ((i > pixelWidth && imageData[i-pixelWidth+A] == 0) ||
+         ((i % pixelWidth) > 0 && imageData[i-4+A] == 0) ||
+         ((i % pixelWidth) < pixelWidth - 1 && imageData[i+4+A] == 0) ||
+         (i < pixelHeight - pixelWidth && imageData[i+pixelWidth+A] == 0)) {
         imageData[i+R] = 255
-      } else if ((i % pixelWidth) > 0 &&
-                 imageData[i-4+A] == 0) {
-        imageData[i+R] = 255
-      } else if ((i % pixelWidth) < pixelWidth - 1 &&
-                 imageData[i+4+A] == 0) {
-        imageData[i+R] = 255
-      } else if (i < pixelHeight - pixelWidth &&
-                 imageData[i+pixelWidth+A] == 0) {
-        imageData[i+R] = 255
+        // fix up the fact that canvas arc drawing does antialiasing
+        // (AFAIK there's no way to turn it off unless we write our own
+        // drawCircle functions)
+        imageData[i+A] = 255
       }
 
     }
@@ -73,8 +70,27 @@
   function update() {
   }
 
+  function drawCircle(screen, centerX, centerY, radius, fillStyle) {
+    fillStyle = fillStyle || 'green'
+    screen.beginPath()
+    screen.arc(centerX, centerY, radius, 0, 2 * Math.PI, false)
+    screen.fillStyle = fillStyle
+    screen.fill()
+  }
+
+  function eraseCircle(screen, centerX, centerY, radius) {
+    var oldCompositeOperation = screen.globalCompositeOperation
+    try {
+      screen.globalCompositeOperation = "destination-out"
+      drawCircle(screen, centerX, centerY, radius, 'rgba(0,0,0,1)')
+    } finally {
+      screen.globalCompositeOperation = oldCompositeOperation
+    }
+  }
+
   function draw() {
     screen.fillRect(5, 5, 100, 100)
+    eraseCircle(screen, 50, 50, 25)
     getEdgePixelData()
     screen.putImageData(edgePixelData, 0, 0)
   }

@@ -9,6 +9,10 @@ var Player = function(game) {
   this.update = function() {
     this.state()
   }
+  this.canFall = function() {
+    // if there is no solid ground beneath us then start falling
+    return !this.game.mapDataAt(this.position.x, this.position.y+1).isEdge
+  }
 
   this.falling = function() {
     // check for an edge up to two pixels below us
@@ -25,8 +29,7 @@ var Player = function(game) {
   }
 
   this.standing = function() {
-    // if there is no solid ground beneath us then start falling
-    if (!this.game.mapDataAt(this.position.x, this.position.y+1).isEdge) {
+    if (this.canFall()) {
       this.state = this.falling
       return
     }
@@ -40,8 +43,7 @@ var Player = function(game) {
   }
 
   this.walking = function () {
-    // if there is no solid ground beneath us then start falling
-    if (!this.game.mapDataAt(this.position.x, this.position.y+1).isEdge) {
+    if (this.canFall()) {
       this.state = this.falling
       return
     }

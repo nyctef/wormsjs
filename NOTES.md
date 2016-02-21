@@ -55,3 +55,4 @@ perf notes:
 
 - http://jsperf.com/canvas-pixel-manipulation/30 - maybe use 32bit views on pixel data rather than 8bit ones
 - https://www.smashingmagazine.com/2012/11/writing-fast-memory-efficient-javascript/
+- http://blog.getify.com/sanity-check-object-creation-performance/

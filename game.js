@@ -68,8 +68,13 @@ var game = (function() {
     for (var i=0; i< mapData.length; i++) {
       if (mapData[i].isEdge) {
         mapRender.data[(i*4)+0] = 255
+        mapRender.data[(i*4)+3] = 255
       }
     }
+  }
+  
+  game.mapDataAt = function mapDataAt(x, y) {
+    return game.mapData[(y*game.size.x) + x]
   }
 
   function draw() {

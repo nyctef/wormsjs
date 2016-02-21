@@ -14,11 +14,11 @@ var Player = function(game) {
     } else {
       return
     }
-    if (!(this.game.edgePixelData)) {
+    if (!(this.game.mapData)) {
       return
     }
-    var alpha = this.game.edgePixelData.data[(this.position.y * 4 * this.game.size.x) + (newX * 4) + 3]
-    if (alpha <= 0) {
+    if (!this.game.mapDataAt(newX-1, this.position.y).isEdge &&
+        !this.game.mapDataAt(newX  , this.position.y).isEdge) {
       this.position.x = newX
     }
   }

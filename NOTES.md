@@ -46,10 +46,12 @@ other notes:
   - log all typed commands so we can save stuff for later
   - immutable game state with history bookmarks / time rewinding
 - experiment with pathfinding - challenge: rope-swinging AI
-- phyics stuff:
+- physics stuff:
   - http://gamedev.stackexchange.com/questions/1589/when-should-i-use-a-fixed-or-variable-time-step
   - http://stackoverflow.com/questions/153507/calculate-the-position-of-an-accelerating-body-after-a-certain-time
   - http://stackoverflow.com/questions/8555470/variable-timesteps-and-gravity-friction
+- canvas zoom:
+  - http://jsfiddle.net/namuol/VAXrL/1459/ and http://stackoverflow.com/questions/7615009/disable-interpolation-when-scaling-a-canvas
 
 perf notes:
 

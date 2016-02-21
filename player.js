@@ -64,13 +64,18 @@ var Player = function(game) {
     }
 
     var newX = this.position.x + sx
-    if (!(this.game.mapData)) {
-      return
+    var maxClimbY = this.position.y - 2
+    var wallAhead = this.game.castLine(this.position.x + sx, maxClimbY,
+                                       this.position.x + sx, this.position.y)
+    if (!wallAhead) {
+      this.position.x += sx
     }
-    var wallAhead = this.game.castLine(this.position.x, this.position.y,
-                                       newX, this.position.y)
-    if (wallAhead) { this.position.x = wallAhead.x - 1*sx }
-    else { this.position.x = newX }
+    else {
+      if (wallAhead.y != maxClimbY) {
+        this.position.x += sx
+        this.position.y = wallAhead.y - 1
+      }
+    }
 
     this.stateData.walkDelay = 3
   }

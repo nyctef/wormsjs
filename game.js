@@ -57,7 +57,10 @@ var game = (function() {
     }
   }
 
+  var keyboardInputSystem = new KeyboardInputSystem()
+
   function update() {
+    keyboardInputSystem.update(game, player)
     player.update()
   }
 
@@ -166,6 +169,7 @@ var game = (function() {
     draw()
     
     window.requestAnimationFrame(game.loop)
+    //window.setTimeout(game.loop, 0)
   }
 
   canvas.addEventListener('click', function(clickEvent) {

@@ -1,10 +1,6 @@
 TODO next (?):
 
-- only call getimagedata once - save it to game.level
-- clone game.level and call it game.levelRender
-- at draw time, copy game.level to game.levelRender, draw interesting things on top and then call setimagedata
-
-- click to destroy circle
+- rectangle player collision instead of single pixel? At least to not fall into a gap of only a single pixel
 - show player aiming line and spacebar to destroy circle in line of sight
 
 
@@ -58,3 +54,12 @@ perf notes:
 - http://jsperf.com/canvas-pixel-manipulation/30 - maybe use 32bit views on pixel data rather than 8bit ones
 - https://www.smashingmagazine.com/2012/11/writing-fast-memory-efficient-javascript/
 - http://blog.getify.com/sanity-check-object-creation-performance/
+
+entity-component systems:
+
+- http://www.chris-granger.com/2012/12/11/anatomy-of-a-knockout/
+- http://gamedev.stackexchange.com/questions/66786/how-to-benefit-from-cpu-cache-in-a-entity-component-system-game-engine
+- http://gameprogrammingpatterns.com/data-locality.html
+- http://gamesfromwithin.com/data-oriented-design
+- http://www.gamedev.net/page/resources/_/technical/game-programming/understanding-component-entity-systems-r3013
+

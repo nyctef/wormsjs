@@ -1,6 +1,6 @@
 var Player = function(game) {
   this.game = game
-  this.keyboard = new Keyboard()
+  this.keyboard_input = new KeyboardInputComponent()
   this.position = { x: 60, y: 50 }
   this.stateData = {}
   this.draw = function(screen) {
@@ -34,8 +34,7 @@ var Player = function(game) {
       return
     }
 
-    if (this.keyboard.isDown(this.keyboard.Keys.LEFT) ||
-        this.keyboard.isDown(this.keyboard.Keys.RIGHT)) {
+    if (this.keyboard_input.left || this.keyboard_input.right) {
       this.stateData.walkDelay = 0
       this.state = this.walking
       return
@@ -54,9 +53,9 @@ var Player = function(game) {
     }
     // start moving left or right if the keyboard buttons are held
     var sx
-    if (this.keyboard.isDown(this.keyboard.Keys.LEFT)) {
+    if (this.keyboard_input.left) {
       sx = -1
-    } else if (this.keyboard.isDown(this.keyboard.Keys.RIGHT)) {
+    } else if (this.keyboard_input.right) {
       sx = +1
     } else {
       this.state = this.standing

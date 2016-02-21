@@ -1,7 +1,8 @@
 var Player = function(game) {
   this.game = game
   this.keyboard_input = new KeyboardInputComponent()
-  this.position = { x: 60, y: 50 }
+  this.position = new PositionComponent(60, 50)
+  this.velocity = new VelocityComponent(0, 0)
   this.stateData = {}
   this.draw = function(screen) {
     screen.drawRect(this.position.x, this.position.y, 1, 1, 'green')
@@ -21,10 +22,11 @@ var Player = function(game) {
     if (edgeBelow) {
       this.position.x = edgeBelow.x
       this.position.y = edgeBelow.y-1
+      this.velocity.x = this.velocity.y = 0
       this.state = this.standing
     }
     else {
-      this.position.y += 2
+      this.velocity.y = 60
     }
   }
 
@@ -35,7 +37,6 @@ var Player = function(game) {
     }
 
     if (this.keyboard_input.left || this.keyboard_input.right) {
-      this.stateData.walkDelay = 0
       this.state = this.walking
       return
     }
@@ -47,10 +48,6 @@ var Player = function(game) {
       return
     }
 
-    if (this.stateData.walkDelay) {
-      this.stateData.walkDelay--
-      return
-    }
     // start moving left or right if the keyboard buttons are held
     var sx
     if (this.keyboard_input.left) {
@@ -58,25 +55,26 @@ var Player = function(game) {
     } else if (this.keyboard_input.right) {
       sx = +1
     } else {
+      this.velocity.x = 0
       this.state = this.standing
       return
     }
 
+      this.velocity.x = sx * 10
     var newX = this.position.x + sx
     var maxClimbY = this.position.y - 2
     var wallAhead = this.game.castLine(this.position.x + sx, maxClimbY,
                                        this.position.x + sx, this.position.y)
     if (!wallAhead) {
-      this.position.x += sx
     }
     else {
       if (wallAhead.y != maxClimbY) {
-        this.position.x += sx
         this.position.y = wallAhead.y - 1
       }
+      else {
+        this.velocity.x = 0
+      }
     }
-
-    this.stateData.walkDelay = 3
   }
 
   this.state = this.falling

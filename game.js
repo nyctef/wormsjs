@@ -58,10 +58,15 @@ var game = (function() {
   }
 
   var keyboardInputSystem = new KeyboardInputSystem()
+  var velocitySystem = new VelocitySystem()
 
   function update() {
+    velocitySystem.start_frame(game)
+
     keyboardInputSystem.update(game, player)
     player.update()
+    velocitySystem.update(game, player)
+
   }
 
 

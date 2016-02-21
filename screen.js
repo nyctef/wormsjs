@@ -7,6 +7,10 @@ var Screen = function(canvas) {
     return this.ctx.getImageData(0, 0, this.width, this.height)
   }
 
+  this.createImageData = function() {
+    return this.ctx.createImageData(this.width, this.height)
+  }
+
   this.drawCircle = function(centerX, centerY, radius, fillStyle) {
     fillStyle = fillStyle || 'green'
     this.ctx.beginPath()

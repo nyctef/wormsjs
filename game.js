@@ -13,19 +13,30 @@ var game = (function() {
 
   console.log(game.size)
 
+  drawUpdate()
+
+  game.map = screen.getImageData()
+  game.mapRender = screen.createImageData()
+
   var player = new Player(game)
 
   game.options = {
-    drawEdgePixelData: false
+    drawEdgePixelData: true
   }
 
-  function getEdgePixelData() {
+  function PixelData() {
+    this.isEdge = false
+  }
+  game.mapData = new Array(game.size.x*game.size.y)
+  for (var i=0; i<game.size.x*game.size.y; i++) { game.mapData[i] = new PixelData(); }
+
+  function getEdgePixelData(mapInput, mapData) {
     var R = 0
     var G = 1
     var B = 2
     var A = 3
-    var imageDataResult = screen.getImageData()
-    var imageData = imageDataResult.data
+
+    var imageData = mapInput.data
     var pixelWidth = game.size.x * 4
     var pixelHeight = pixelWidth * game.size.y
     for (var i=0; i<imageData.length; i+= 4) {
@@ -35,15 +46,12 @@ var game = (function() {
          ((i % pixelWidth) > 0 && imageData[i-4+A] == 0) ||
          ((i % pixelWidth) < pixelWidth - 1 && imageData[i+4+A] == 0) ||
          (i < pixelHeight - pixelWidth && imageData[i+pixelWidth+A] == 0)) {
-        imageData[i+R] = 255
-        // fix up the fact that canvas arc drawing does antialiasing
-        // (AFAIK there's no way to turn it off unless we write our own
-        // drawCircle functions)
-        imageData[i+A] = 255
+        mapData[i/4].isEdge = true;
+      }
+      else {
+        mapData[i/4].isEdge = false;
       }
     }
-
-    return imageDataResult
   }
 
   function update() {
@@ -54,16 +62,26 @@ var game = (function() {
   function drawUpdate() {
     screen.drawRect(5, 5, 100, 100, 'black')
     screen.eraseCircle(50, 50, 25)
-    game.edgePixelData = getEdgePixelData()
+  }
+
+  function drawIsEdge(mapData, mapRender) {
+    for (var i=0; i< mapData.length; i++) {
+      if (mapData[i].isEdge) {
+        mapRender.data[(i*4)+0] = 255
+      }
+    }
   }
 
   function draw() {
-    drawUpdate()
+    getEdgePixelData(game.map, game.mapData)
+    // copy map to mapRender
+    game.mapRender.data.set(game.map.data)
 
     if (game.options.drawEdgePixelData) {
-      screen.putImageData(game.edgePixelData)
+      drawIsEdge(game.mapData, game.mapRender)
     }
 
+    screen.putImageData(game.mapRender)
     player.draw(screen)
   }
 

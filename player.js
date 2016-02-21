@@ -3,7 +3,7 @@ var Player = function(game) {
   this.keyboard = new Keyboard()
   this.position = { x: 60, y: 50 }
   this.draw = function(screen) {
-    screen.drawCircle(this.position.x, this.position.y, 1, 'green')
+    screen.drawRect(this.position.x, this.position.y, 1, 1, 'green')
   }
   this.update = function() {
     this.state()

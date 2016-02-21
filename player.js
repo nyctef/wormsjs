@@ -10,8 +10,11 @@ var Player = function(game) {
   }
 
   this.falling = function() {
-    if (this.game.mapDataAt(this.position.x, this.position.y+1).isEdge ||
-        this.game.mapDataAt(this.position.x, this.position.y+2).isEdge) {
+    var edgeBelow = this.game.castLine(this.position.x, this.position.y+1,
+                                       this.position.x, this.position.y+2)
+    if (edgeBelow) {
+      this.position.x = edgeBelow.x
+      this.position.y = edgeBelow.y-1
       this.state = this.standing
     }
     else {
@@ -20,21 +23,24 @@ var Player = function(game) {
   }
 
   this.standing = function() {
-    var newX
+    var sx
     if (this.keyboard.isDown(this.keyboard.Keys.LEFT)) {
-      newX = this.position.x - 2
+      sx = -1
     } else if (this.keyboard.isDown(this.keyboard.Keys.RIGHT)) {
-      newX = this.position.x + 2
+      sx = +1
     } else {
       return
     }
+
+    var newX = this.position.x + 2*sx
     if (!(this.game.mapData)) {
       return
     }
-    if (!this.game.mapDataAt(newX-1, this.position.y).isEdge &&
-        !this.game.mapDataAt(newX  , this.position.y).isEdge) {
-      this.position.x = newX
-    }
+    var wallAhead = this.game.castLine(this.position.x, this.position.y,
+                                       newX, this.position.y)
+    if (wallAhead) { this.position.x = wallAhead.x - 1*sx }
+    else { this.position.x = newX }
+
     if (!this.game.mapDataAt(newX, this.position.y+1).isEdge) {
       this.state = this.falling
       return

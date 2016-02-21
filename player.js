@@ -69,6 +69,9 @@ var Player = function(game) {
     }
     else {
       if (wallAhead.y != maxClimbY) {
+        // TODO: currently this causes us to bounce up/down every frame where
+        // we don't actually move horizontally - need to only try to climb when
+        // we're actually going to move 
         this.position.y = wallAhead.y - 1
       }
       else {

@@ -1,0 +1,24 @@
+{
+  "name": "wormsjs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "  ",
+  "scripts": {
+    "test": "  ",
+    "lint": "gulp lint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nyctef/wormsjs.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nyctef/wormsjs/issues"
+  },
+  "homepage": "https://github.com/nyctef/wormsjs#readme",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-eslint": "^2.0.0"
+  }
+}

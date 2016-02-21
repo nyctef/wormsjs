@@ -1,0 +1,3 @@
+building:
+
+- `npm run lint`

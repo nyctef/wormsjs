@@ -15,7 +15,10 @@ var game = (function() {
 
   drawUpdate()
 
-  game.map = screen.getImageData()
+  function updateMap() {
+    game.map = screen.getImageData()
+  }
+  updateMap()
   game.mapRender = screen.createImageData()
 
   var player = new Player(game)
@@ -40,7 +43,7 @@ var game = (function() {
     var pixelWidth = game.size.x * 4
     var pixelHeight = pixelWidth * game.size.y
     for (var i=0; i<imageData.length; i+= 4) {
-      if (imageData[i+A] == 0) continue
+      if (imageData[i+A] == 0) { mapData[i/4].isEdge = false; continue; }
 
       if ((i > pixelWidth && imageData[i-pixelWidth+A] == 0) ||
          ((i % pixelWidth) > 0 && imageData[i-4+A] == 0) ||
@@ -159,8 +162,20 @@ var game = (function() {
     window.requestAnimationFrame(game.loop)
   }
 
+  canvas.addEventListener('click', function(clickEvent) {
+    console.log(clickEvent)
+    var x = clickEvent.pageX - canvas.offsetLeft
+    var y = clickEvent.pageY - canvas.offsetTop
+    var mx = Math.round(x * canvas.width / canvas.offsetWidth)
+    var my = Math.round(y * canvas.height / canvas.offsetHeight)
+    console.log(`registered click at ${x},${y} (${mx},${my})`)
+    screen.eraseCircle(mx, my, 10)
+    updateMap()
+  })
+
   // start the game running
   game.loop()
+
 
   return game
 

@@ -10,6 +10,7 @@ var Player = function(game) {
   }
 
   this.falling = function() {
+    // check for an edge up to two pixels below us
     var edgeBelow = this.game.castLine(this.position.x, this.position.y+1,
                                        this.position.x, this.position.y+2)
     if (edgeBelow) {
@@ -23,6 +24,13 @@ var Player = function(game) {
   }
 
   this.standing = function() {
+    // if there is no solid ground beneath us then start falling
+    if (!this.game.mapDataAt(this.position.x, this.position.y+1).isEdge) {
+      this.state = this.falling
+      return
+    }
+
+    // start moving left or right if the keyboard buttons are held
     var sx
     if (this.keyboard.isDown(this.keyboard.Keys.LEFT)) {
       sx = -1
@@ -41,10 +49,6 @@ var Player = function(game) {
     if (wallAhead) { this.position.x = wallAhead.x - 1*sx }
     else { this.position.x = newX }
 
-    if (!this.game.mapDataAt(newX, this.position.y+1).isEdge) {
-      this.state = this.falling
-      return
-    }
   }
 
   this.state = this.falling

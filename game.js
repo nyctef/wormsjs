@@ -3,8 +3,8 @@ var game = (function() {
 
   var canvas = document.getElementById('screen')
   var canvasParent = canvas.parentNode
-  canvas.width = canvasParent.offsetWidth
-  canvas.height = canvasParent.offsetHeight
+//  canvas.width = canvasParent.offsetWidth
+//  canvas.height = canvasParent.offsetHeight
   var screen = new Screen(canvas)
 
   var game = {}

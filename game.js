@@ -125,14 +125,20 @@ var game = (function() {
     }
   }
 
+  var edge = new PixelData()
+  edge.isEdge = true;
   
   game.mapDataAt = function mapDataAt(x, y) {
+    if (x<0 || x>=game.size.x ||
+        y<0 || y>=game.size.y) { return edge }
     return game.mapData[(y*game.size.x) + x]
   }
 
   game.castLine = function(x0, y0, x1, y1) {
-    return castLine(function(x, y) { return game.mapDataAt(x, y).isEdge },
-                    x0, y0, x1, y1);
+    var isEdge = function(x, y) { 
+      return game.mapDataAt(x, y).isEdge 
+    }
+    return castLine(isEdge, x0, y0, x1, y1);
   }
 
   function draw() {

@@ -72,6 +72,33 @@ var game = (function() {
       }
     }
   }
+
+  function setPixel(target, x, y, r, g, b, a) {
+      target.data[(y*target.width*4)+x*4] = r;
+      target.data[(y*target.width*4)+x*4+1] = g;
+      target.data[(y*target.width*4)+x*4+2] = b;
+      target.data[(y*target.width*4)+x*4+3] = a;
+  }
+
+  function drawLine(target, x0, y0, x1, y1) {
+    // https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
+    // http://stackoverflow.com/a/4672319/895407
+    var dx = Math.abs(x1-x0);
+    var dy = Math.abs(y1-y0);
+    var sx = (x0 < x1) ? 1 : -1;
+    var sy = (y0 < y1) ? 1 : -1;
+    var err = dx-dy;
+
+    while(true) {
+      setPixel(target, x0, y0, 255, 0, 0, 255)
+
+      if ((x0==x1) && (y0==y1)) break;
+      var e2 = 2*err;
+      if (e2 >-dy){ err -= dy; x0  += sx; }
+      if (e2 < dx){ err += dx; y0  += sy; }
+    }
+  }
+
   
   game.mapDataAt = function mapDataAt(x, y) {
     return game.mapData[(y*game.size.x) + x]
@@ -85,6 +112,10 @@ var game = (function() {
     if (game.options.drawEdgePixelData) {
       drawIsEdge(game.mapData, game.mapRender)
     }
+
+    drawLine(game.mapRender, 110, 5, 200, 5)
+    drawLine(game.mapRender, 115, 10, 200, 70)
+    drawLine(game.mapRender, 110, 15, 200, 100)
 
     screen.putImageData(game.mapRender)
     player.draw(screen)

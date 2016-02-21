@@ -8,7 +8,7 @@ var countFrame = (function() {
     var now = performance.now()
     var diffMs = now - frameCountStartTime
     var diffSecs = diffMs / 1000
-    console.log('fps: ' + frameCount / diffSecs)
+    console.log('fps: ' + (frameCount / diffSecs).toFixed(2))
 
     frameCountStartTime = now
     frameCount = 0

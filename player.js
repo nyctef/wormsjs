@@ -2,6 +2,7 @@ var Player = function(game) {
   this.game = game
   this.keyboard = new Keyboard()
   this.position = { x: 60, y: 50 }
+  this.stateData = {}
   this.draw = function(screen) {
     screen.drawRect(this.position.x, this.position.y, 1, 1, 'green')
   }
@@ -30,6 +31,25 @@ var Player = function(game) {
       return
     }
 
+    if (this.keyboard.isDown(this.keyboard.Keys.LEFT) ||
+        this.keyboard.isDown(this.keyboard.Keys.RIGHT)) {
+      this.stateData.walkDelay = 0
+      this.state = this.walking
+      return
+    }
+  }
+
+  this.walking = function () {
+    // if there is no solid ground beneath us then start falling
+    if (!this.game.mapDataAt(this.position.x, this.position.y+1).isEdge) {
+      this.state = this.falling
+      return
+    }
+
+    if (this.stateData.walkDelay) {
+      this.stateData.walkDelay--
+      return
+    }
     // start moving left or right if the keyboard buttons are held
     var sx
     if (this.keyboard.isDown(this.keyboard.Keys.LEFT)) {
@@ -37,10 +57,11 @@ var Player = function(game) {
     } else if (this.keyboard.isDown(this.keyboard.Keys.RIGHT)) {
       sx = +1
     } else {
+      this.state = this.standing
       return
     }
 
-    var newX = this.position.x + 2*sx
+    var newX = this.position.x + sx
     if (!(this.game.mapData)) {
       return
     }
@@ -49,6 +70,7 @@ var Player = function(game) {
     if (wallAhead) { this.position.x = wallAhead.x - 1*sx }
     else { this.position.x = newX }
 
+    this.stateData.walkDelay = 3
   }
 
   this.state = this.falling

@@ -65,9 +65,7 @@ var Player = function(game) {
     var maxClimbY = this.position.y - 2
     var wallAhead = this.game.castLine(this.position.x + sx, maxClimbY,
                                        this.position.x + sx, this.position.y)
-    if (!wallAhead) {
-    }
-    else {
+    if (wallAhead) {
       if (wallAhead.y != maxClimbY) {
         // TODO: currently this causes us to bounce up/down every frame where
         // we don't actually move horizontally - need to only try to climb when

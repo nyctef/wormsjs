@@ -63,3 +63,5 @@ entity-component systems:
 - http://gamesfromwithin.com/data-oriented-design
 - http://www.gamedev.net/page/resources/_/technical/game-programming/understanding-component-entity-systems-r3013
 
+One other advantage: VelocitySystem is actually unit-testable in a way that the code was never testable before pulling it out as a system - would be good to try and TDD through the bugs still left in there
+

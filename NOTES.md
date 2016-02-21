@@ -51,3 +51,7 @@ other notes:
   - http://stackoverflow.com/questions/153507/calculate-the-position-of-an-accelerating-body-after-a-certain-time
   - http://stackoverflow.com/questions/8555470/variable-timesteps-and-gravity-friction
 
+perf notes:
+
+- http://jsperf.com/canvas-pixel-manipulation/30 - maybe use 32bit views on pixel data rather than 8bit ones
+- https://www.smashingmagazine.com/2012/11/writing-fast-memory-efficient-javascript/

@@ -20,3 +20,5 @@ var Keyboard = function() {
     SPACE: 32,
   }
 }
+
+export default Keyboard

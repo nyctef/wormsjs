@@ -1,8 +1,10 @@
+import * as c from './behaviours'
+
 var Player = function(game) {
   this.game = game
-  this.keyboard_input = new KeyboardInputComponent()
-  this.position = new PositionComponent(60, 50)
-  this.velocity = new VelocityComponent(0, 0)
+  this.keyboard_input = new c.KeyboardInputComponent()
+  this.position = new c.PositionComponent(60, 50)
+  this.velocity = new c.VelocityComponent(0, 0)
   this.stateData = {}
   this.draw = function(screen) {
     screen.drawRect(this.position.x, this.position.y, 1, 1, 'green')
@@ -82,3 +84,5 @@ var Player = function(game) {
 }
 
 // TODO: pull out control code and start working on climbing / jumping / falling behaviours
+//
+export default Player

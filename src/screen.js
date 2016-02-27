@@ -36,3 +36,5 @@ var Screen = function(canvas) {
     this.ctx.putImageData(data, 0, 0)
   }
 }
+
+export default Screen

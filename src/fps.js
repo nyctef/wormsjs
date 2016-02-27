@@ -26,3 +26,5 @@ var countFrame = (function() {
   
   return countFrame
 })()
+
+export default countFrame

@@ -1,3 +1,5 @@
+import Keyboard from './keyboard'
+
 var KeyboardInputComponent = function() {
   this.left = false
   this.right = false
@@ -62,4 +64,10 @@ var VelocitySystem = function() {
     if (this.frame_counter % (60 / dx) == 0) { entity.position.x += sx }
     if (this.frame_counter % (60 / dy) == 0) { entity.position.y += sy }
   }
+}
+
+export {
+  KeyboardInputComponent, KeyboardInputSystem,
+  VelocityComponent, VelocitySystem,
+  PositionComponent
 }

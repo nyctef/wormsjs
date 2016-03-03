@@ -5,6 +5,7 @@ var Player = function(game) {
   this.keyboard_input = new c.KeyboardInputComponent()
   this.position = new c.PositionComponent(60, 50)
   this.velocity = new c.VelocityComponent(0, 0)
+  this.move_plan = new c.MovePlanComponent(0, 0)
   this.stateData = {}
   this.draw = function(screen) {
     screen.drawRect(this.position.x, this.position.y, 1, 1, 'green')
@@ -18,21 +19,26 @@ var Player = function(game) {
   }
 
   this.falling = function() {
+    console.log('entering falling state')
     // check for an edge up to two pixels below us
+    //console.log(`checking for edge at ${this.position.x},${this.position.y+2}`)
     var edgeBelow = this.game.castLine(this.position.x, this.position.y+1,
                                        this.position.x, this.position.y+2)
     if (edgeBelow) {
+      console.log('edge below')
       this.position.x = edgeBelow.x
       this.position.y = edgeBelow.y-1
       this.velocity.x = this.velocity.y = 0
       this.state = this.standing
     }
     else {
+      //console.log('no edge below')
       this.velocity.y = 60
     }
   }
 
   this.standing = function() {
+    console.log('entering standing state')
     if (this.canFall()) {
       this.state = this.falling
       return
@@ -64,20 +70,6 @@ var Player = function(game) {
 
       this.velocity.x = sx * 10
     var newX = this.position.x + sx
-    var maxClimbY = this.position.y - 2
-    var wallAhead = this.game.castLine(this.position.x + sx, maxClimbY,
-                                       this.position.x + sx, this.position.y)
-    if (wallAhead) {
-      if (wallAhead.y != maxClimbY) {
-        // TODO: currently this causes us to bounce up/down every frame where
-        // we don't actually move horizontally - need to only try to climb when
-        // we're actually going to move 
-        this.position.y = wallAhead.y - 1
-      }
-      else {
-        this.velocity.x = 0
-      }
-    }
   }
 
   this.state = this.falling

@@ -79,9 +79,12 @@ var VelocitySystem = function() {
                                   entity.position.x + entity.move_plan.x, entity.position.y)
     if (wallAhead) {
       if (wallAhead.y != maxClimbY) {
-        entity.move_plan.y = entity.position.y - wallAhead.y - 1
+        console.log(`climbing with move_plan.y = ${entity.move_plan.y}`)
+        entity.move_plan.y = wallAhead.y - entity.position.y - 1
+        console.log(`..set move_plan.y to ${entity.move_plan.y} (=${wallAhead.y} - ${entity.position.y} - 1)`)
       }
       else {
+        console.log('collision')
         // a collision happened
         entity.velocity.x = 0
         entity.move_plan.x = 0

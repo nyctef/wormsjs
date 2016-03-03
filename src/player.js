@@ -19,26 +19,21 @@ var Player = function(game) {
   }
 
   this.falling = function() {
-    console.log('entering falling state')
     // check for an edge up to two pixels below us
-    //console.log(`checking for edge at ${this.position.x},${this.position.y+2}`)
     var edgeBelow = this.game.castLine(this.position.x, this.position.y+1,
                                        this.position.x, this.position.y+2)
     if (edgeBelow) {
-      console.log('edge below')
       this.position.x = edgeBelow.x
       this.position.y = edgeBelow.y-1
       this.velocity.x = this.velocity.y = 0
       this.state = this.standing
     }
     else {
-      //console.log('no edge below')
       this.velocity.y = 60
     }
   }
 
   this.standing = function() {
-    console.log('entering standing state')
     if (this.canFall()) {
       this.state = this.falling
       return
@@ -69,7 +64,6 @@ var Player = function(game) {
     }
 
       this.velocity.x = sx * 10
-    var newX = this.position.x + sx
   }
 
   this.state = this.falling

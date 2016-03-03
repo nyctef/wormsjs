@@ -48,8 +48,13 @@ other notes:
   - http://stackoverflow.com/questions/8555470/variable-timesteps-and-gravity-friction
 - canvas zoom:
   - http://jsfiddle.net/namuol/VAXrL/1459/ and http://stackoverflow.com/questions/7615009/disable-interpolation-when-scaling-a-canvas
-
+- map generation:
+  - http://gamedev.stackexchange.com/questions/20588/how-can-i-generate-worms-style-terrain
+- collision (getting surface normals):
+  - http://gamedev.stackexchange.com/questions/2853/how-do-i-calculate-the-angle-of-the-slope-at-a-point-on-a-2d-bitmap-terrain
 perf notes:
+- rope "physics":
+  - http://gamedev.stackexchange.com/questions/558/implementing-a-wrapping-wire-like-the-worms-ninja-rope-in-a-2d-physics-engine
 
 - http://jsperf.com/canvas-pixel-manipulation/30 - maybe use 32bit views on pixel data rather than 8bit ones
 - https://www.smashingmagazine.com/2012/11/writing-fast-memory-efficient-javascript/

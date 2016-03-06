@@ -6,7 +6,6 @@ var Player = function(game) {
   this.position = new c.PositionComponent(60, 50)
   this.velocity = new c.VelocityComponent(0, 0)
   this.move_plan = new c.MovePlanComponent(0, 0)
-  this.stateData = {}
   this.draw = function(screen) {
     screen.drawRect(this.position.x, this.position.y, 1, 1, 'green')
   }

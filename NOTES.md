@@ -29,6 +29,7 @@ Pathfinding:
 - Build navmesh for level and then update as stuff gets destroyed 
 - http://www.gamasutra.com/blogs/YoannPignole/20150427/241995/The_Hobbyist_Coder_3__2D_platformers_pathfinding__part_12.php
 - https://github.com/jumoel/mario-astar-robinbaumgarten
+- http://bitsquid.blogspot.co.uk/2010/10/is-overrated.html
 
 Bazooka AI idea:
 

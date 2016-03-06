@@ -3,13 +3,12 @@ import Screen from './screen'
 import * as c from './behaviours'
 import Player from './player'
 import countFrame from './fps'
+import Map from './map'
 
 window.game = (function() {
 
   var canvas = document.getElementById('screen')
   var canvasParent = canvas.parentNode
-//  canvas.width = canvasParent.offsetWidth
-//  canvas.height = canvasParent.offsetHeight
   var screen = new Screen(canvas)
 
   var game = {}
@@ -18,48 +17,18 @@ window.game = (function() {
 
   console.log(game.size)
 
-  drawUpdate()
+  // define some starting geometry
+  // TODO: move this onto Map functions? or maybe a separate LoadMap thing?
+  screen.drawRect(5, 5, 100, 100, 'black')
+  screen.eraseCircle(50, 50, 25)
 
-  function updateMap() {
-    game.map = screen.getImageData()
-  }
-  updateMap()
+  game.map = new Map(screen.getImageData())
   game.mapRender = screen.createImageData()
 
   var player = new Player(game)
 
   game.options = {
     drawEdgePixelData: true
-  }
-
-  function PixelData() {
-    this.isEdge = false
-  }
-  game.mapData = new Array(game.size.x*game.size.y)
-  for (var i=0; i<game.size.x*game.size.y; i++) { game.mapData[i] = new PixelData() }
-
-  function getEdgePixelData(mapInput, mapData) {
-    var R = 0
-    var G = 1
-    var B = 2
-    var A = 3
-
-    var imageData = mapInput.data
-    var pixelWidth = game.size.x * 4
-    var pixelHeight = pixelWidth * game.size.y
-    for (var i=0; i<imageData.length; i+= 4) {
-      if (imageData[i+A] == 0) { mapData[i/4].isEdge = false; continue }
-
-      if ((i > pixelWidth && imageData[i-pixelWidth+A] == 0) ||
-         ((i % pixelWidth) > 0 && imageData[i-4+A] == 0) ||
-         ((i % pixelWidth) < pixelWidth - 1 && imageData[i+4+A] == 0) ||
-         (i < pixelHeight - pixelWidth && imageData[i+pixelWidth+A] == 0)) {
-        mapData[i/4].isEdge = true
-      }
-      else {
-        mapData[i/4].isEdge = false
-      }
-    }
   }
 
   var keyboardInputSystem = new c.KeyboardInputSystem()
@@ -74,13 +43,6 @@ window.game = (function() {
     velocitySystem.set_move_plan(game, player)
     velocitySystem.check_collisions(game, player)
     velocitySystem.apply_move_plan(game, player)
-
-  }
-
-
-  function drawUpdate() {
-    screen.drawRect(5, 5, 100, 100, 'black')
-    screen.eraseCircle(50, 50, 25)
   }
 
   function drawIsEdge(mapData, mapRender) {
@@ -118,57 +80,13 @@ window.game = (function() {
     }
   }
 
-  function Point(x, y) {
-    this.x = x
-    this.y = y
-  }
-
-  function castLine(isEdge, x0, y0, x1, y1) {
-    // based on drawLine/Bresenham's - iterate along the line and stop if we see an edge
-    var dx = Math.abs(x1-x0)
-    var dy = Math.abs(y1-y0)
-    var sx = (x0 < x1) ? 1 : -1
-    var sy = (y0 < y1) ? 1 : -1
-    var err = dx-dy
-
-    while(true) {
-      if (isEdge(x0, y0)) { return new Point(x0, y0) }
-
-      if ((x0==x1) && (y0==y1)) { return null }
-      var e2 = 2*err
-      if (e2 >-dy){ err -= dy; x0  += sx }
-      if (e2 < dx){ err += dx; y0  += sy }
-    }
-  }
-
-  var edge = new PixelData()
-  edge.isEdge = true
-  
-  game.mapDataAt = function mapDataAt(x, y) {
-    if (x<0 || x>=game.size.x ||
-        y<0 || y>=game.size.y) { return edge }
-    return game.mapData[(y*game.size.x) + x]
-  }
-
-  game.castLine = function(x0, y0, x1, y1) {
-    var isEdge = function(x, y) { 
-      return game.mapDataAt(x, y).isEdge 
-    }
-    return castLine(isEdge, x0, y0, x1, y1)
-  }
-
   function draw() {
-    getEdgePixelData(game.map, game.mapData)
-    // copy map to mapRender
-    game.mapRender.data.set(game.map.data)
+    // copy map background into mapRender
+    game.mapRender.data.set(game.map.getImageData().data)
 
     if (game.options.drawEdgePixelData) {
-      drawIsEdge(game.mapData, game.mapRender)
+      drawIsEdge(game.map.getMapData(), game.mapRender)
     }
-
-    drawLine(game.mapRender, 110, 5, 200, 5)
-    drawLine(game.mapRender, 115, 10, 200, 70)
-    drawLine(game.mapRender, 110, 15, 200, 100)
 
     screen.putImageData(game.mapRender)
     player.draw(screen)
@@ -192,14 +110,12 @@ window.game = (function() {
     var mx = Math.round(x * canvas.width / canvas.offsetWidth)
     var my = Math.round(y * canvas.height / canvas.offsetHeight)
     console.log(`registered click at ${x},${y} (${mx},${my})`)
-    screen.eraseCircle(mx, my, 10)
-    updateMap()
+    game.map.explodeHole(mx, my, 10)
   })
 
   // start the game running
   game.loop()
 
-
+  console.log(game)
   return game
-
 })()

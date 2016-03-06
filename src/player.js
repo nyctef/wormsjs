@@ -25,18 +25,6 @@ var Player = function(game) {
   }
 
   this.falling = function() {
-    // check for an edge up to two pixels below us
-    var edgeBelow = this.game.castLine(this.position.x, this.position.y+1,
-                                       this.position.x, this.position.y+2)
-    if (edgeBelow) {
-      this.position.x = edgeBelow.x
-      this.position.y = edgeBelow.y-1
-      this.velocity.x = this.velocity.y = 0
-      this.player_state.state = c.PlayerStateComponent.STANDING
-    }
-    else {
-      this.velocity.y = 60
-    }
   }
 
   this.standing = function() {

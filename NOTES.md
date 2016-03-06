@@ -1,8 +1,15 @@
 TODO next (?):
 
 - rectangle player collision instead of single pixel? At least to not fall into a gap of only a single pixel
+- dump 4x scaling and show at real size
+- accelerated falling and jumping for some more interesting movement
 - show player aiming line and spacebar to destroy circle in line of sight
 
+TODO later:
+
+- consolidate components and systems - currently they're probably way too
+  finely-grained to be efficient. Easier to merge small things than to split
+  apart large things, though, so put this off for as long as possible
 
 other ideas:
 
@@ -52,6 +59,8 @@ other notes:
   - http://gamedev.stackexchange.com/questions/20588/how-can-i-generate-worms-style-terrain
 - collision (getting surface normals):
   - http://gamedev.stackexchange.com/questions/2853/how-do-i-calculate-the-angle-of-the-slope-at-a-point-on-a-2d-bitmap-terrain
+- lightweight live reloading:
+  - http://bitsquid.blogspot.co.uk/2016/01/hot-reloadable-javascript-batman.html
 perf notes:
 - rope "physics":
   - http://gamedev.stackexchange.com/questions/558/implementing-a-wrapping-wire-like-the-worms-ninja-rope-in-a-2d-physics-engine
@@ -71,6 +80,8 @@ entity-component systems:
 - parent/child relationships:
   - https://mtnphil.wordpress.com/2014/06/09/managing-game-object-hierarchy-in-an-entity-component-system/
   - http://gamedev.stackexchange.com/questions/31888/in-an-entity-component-system-engine-how-do-i-deal-with-groups-of-dependent-ent
+- top-level APIs: http://bitsquid.blogspot.co.uk/2014/08/building-data-oriented-entity-system.html
+  - notably encapsulating the entity-component relationships inside the actual component managers rather than having the lists-of-components as a top-level thing
 
 One other advantage: VelocitySystem is actually unit-testable in a way that the code was never testable before pulling it out as a system - would be good to try and TDD through the bugs still left in there
 

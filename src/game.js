@@ -64,12 +64,13 @@ window.game = (function() {
 
   var keyboardInputSystem = new c.KeyboardInputSystem()
   var velocitySystem = new c.VelocitySystem()
+  var playerControlSystem = new c.PlayerControlSystem()
 
   function update() {
     velocitySystem.start_frame(game)
 
     keyboardInputSystem.update(game, player)
-    player.update()
+    playerControlSystem.update(game, player)
     velocitySystem.set_move_plan(game, player)
     velocitySystem.check_collisions(game, player)
     velocitySystem.apply_move_plan(game, player)

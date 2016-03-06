@@ -11,9 +11,7 @@ var Player = function(game) {
     screen.drawRect(this.position.x, this.position.y, 1, 1, 'green')
   }
   this.update = function() {
-    if (this.player_state.state == c.PlayerStateComponent.FALLING) {
-      this.falling()
-    } else if (this.player_state.state == c.PlayerStateComponent.STANDING) {
+    if (this.player_state.state == c.PlayerStateComponent.STANDING) {
       this.standing()
     } else if (this.player_state.state == c.PlayerStateComponent.WALKING) {
       this.walking()
@@ -22,9 +20,6 @@ var Player = function(game) {
   this.canFall = function() {
     // if there is no solid ground beneath us then start falling
     return !this.game.mapDataAt(this.position.x, this.position.y+1).isEdge
-  }
-
-  this.falling = function() {
   }
 
   this.standing = function() {

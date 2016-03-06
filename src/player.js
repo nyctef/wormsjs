@@ -6,11 +6,18 @@ var Player = function(game) {
   this.position = new c.PositionComponent(60, 50)
   this.velocity = new c.VelocityComponent(0, 0)
   this.move_plan = new c.MovePlanComponent(0, 0)
+  this.player_state = new c.PlayerStateComponent()
   this.draw = function(screen) {
     screen.drawRect(this.position.x, this.position.y, 1, 1, 'green')
   }
   this.update = function() {
-    this.state()
+    if (this.player_state.state == c.PlayerStateComponent.FALLING) {
+      this.falling()
+    } else if (this.player_state.state == c.PlayerStateComponent.STANDING) {
+      this.standing()
+    } else if (this.player_state.state == c.PlayerStateComponent.WALKING) {
+      this.walking()
+    }
   }
   this.canFall = function() {
     // if there is no solid ground beneath us then start falling
@@ -25,7 +32,7 @@ var Player = function(game) {
       this.position.x = edgeBelow.x
       this.position.y = edgeBelow.y-1
       this.velocity.x = this.velocity.y = 0
-      this.state = this.standing
+      this.player_state.state = c.PlayerStateComponent.STANDING
     }
     else {
       this.velocity.y = 60
@@ -34,19 +41,19 @@ var Player = function(game) {
 
   this.standing = function() {
     if (this.canFall()) {
-      this.state = this.falling
+      this.player_state.state = c.PlayerStateComponent.FALLING
       return
     }
 
     if (this.keyboard_input.left || this.keyboard_input.right) {
-      this.state = this.walking
+      this.player_state.state = c.PlayerStateComponent.WALKING
       return
     }
   }
 
   this.walking = function () {
     if (this.canFall()) {
-      this.state = this.falling
+      this.player_state.state = c.PlayerStateComponent.FALLING
       return
     }
 
@@ -58,14 +65,12 @@ var Player = function(game) {
       sx = +1
     } else {
       this.velocity.x = 0
-      this.state = this.standing
+      this.player_state.state = c.PlayerStateComponent.STANDING
       return
     }
 
       this.velocity.x = sx * 10
   }
-
-  this.state = this.falling
 }
 
 // TODO: pull out control code and start working on climbing / jumping / falling behaviours

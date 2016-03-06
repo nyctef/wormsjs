@@ -66,7 +66,11 @@ entity-component systems:
 - http://gamedev.stackexchange.com/questions/66786/how-to-benefit-from-cpu-cache-in-a-entity-component-system-game-engine
 - http://gameprogrammingpatterns.com/data-locality.html
 - http://gamesfromwithin.com/data-oriented-design
-- http://www.gamedev.net/page/resources/_/technical/game-programming/understanding-component-entity-systems-r3013
+- http://www.gamedev.net/page/resources/_/technical/game-programming/understanding-component-entity-systems-r3013 _x
+- performance: http://t-machine.org/index.php/2014/03/08/data-structures-for-entity-systems-contiguous-memory/
+- parent/child relationships:
+  - https://mtnphil.wordpress.com/2014/06/09/managing-game-object-hierarchy-in-an-entity-component-system/
+  - http://gamedev.stackexchange.com/questions/31888/in-an-entity-component-system-engine-how-do-i-deal-with-groups-of-dependent-ent
 
 One other advantage: VelocitySystem is actually unit-testable in a way that the code was never testable before pulling it out as a system - would be good to try and TDD through the bugs still left in there
 

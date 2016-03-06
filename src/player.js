@@ -1,7 +1,6 @@
 import * as c from './behaviours'
 
-var Player = function(game) {
-  this.game = game
+var Player = function() {
   this.keyboard_input = new c.KeyboardInputComponent()
   this.position = new c.PositionComponent(60, 50)
   this.velocity = new c.VelocityComponent(0, 0)
@@ -17,16 +16,8 @@ var Player = function(game) {
       this.walking()
     }
   }
-  this.canFall = function() {
-    // if there is no solid ground beneath us then start falling
-    return !this.game.mapDataAt(this.position.x, this.position.y+1).isEdge
-  }
 
   this.standing = function() {
-    if (this.canFall()) {
-      this.player_state.state = c.PlayerStateComponent.FALLING
-      return
-    }
 
     if (this.keyboard_input.left || this.keyboard_input.right) {
       this.player_state.state = c.PlayerStateComponent.WALKING
@@ -35,10 +26,6 @@ var Player = function(game) {
   }
 
   this.walking = function () {
-    if (this.canFall()) {
-      this.player_state.state = c.PlayerStateComponent.FALLING
-      return
-    }
 
     // start moving left or right if the keyboard buttons are held
     var sx

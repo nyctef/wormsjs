@@ -91,10 +91,13 @@ function Map(initialImageData) {
   }
 
   this.explodeHole = function(x0, y0, radius) {
-    // TODO: actually draw a circle
     for (var y = y0 - radius; y < y0 + radius; y++) {
       for (var x = x0 - radius; x < x0 + radius; x++) {
-        this._imageData.data[y*4*this._w + x*4 + A] = 0
+        var xw = (x0-x)*(x0-x)
+        var yw = (y0-y)*(y0-y)
+        if (xw + yw <= radius*radius) {
+          this._imageData.data[y*4*this._w + x*4 + A] = 0
+        }
       }
     }
     // TODO: can restrict this to just the area that we've changed

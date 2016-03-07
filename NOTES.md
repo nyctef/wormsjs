@@ -1,6 +1,5 @@
 TODO next (?):
 
-- fix drawing: reimplement drawing circles on mouse click
 - rectangle player collision instead of single pixel? At least to not fall into
   a gap of only a single pixel
 - dump 4x scaling and show at real size

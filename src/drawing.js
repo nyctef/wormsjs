@@ -12,15 +12,15 @@ function DrawingSystem() {
 
   this.drawDebugData = function(screen, game) {
     if (game.options.drawEdgePixelData) {
-      this.drawIsEdge(game.map.getMapData(), game.mapRender)
+      this.drawIsEdge(screen, game.map.getMapData())
     }
   }
 
-  this.drawIsEdge = function(mapData, mapRender) {
+  this.drawIsEdge = function(screen, mapData) {
+    var width = screen.width
     for (var i=0; i< mapData.length; i++) {
       if (mapData[i].isEdge) {
-        mapRender.data[(i*4)+0] = 255
-        mapRender.data[(i*4)+3] = 255
+        screen.drawPixel(i%width, Math.round(i/width), 'red')
       }
     }
   }

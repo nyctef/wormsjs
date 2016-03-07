@@ -52,8 +52,9 @@ window.game = (function() {
     // copy map background into mapRender
     game.mapRender.data.set(game.map.getImageData().data)
 
-    drawingSystem.drawDebugData(screen, game)
     screen.putImageData(game.mapRender)
+
+    drawingSystem.drawDebugData(screen, game)
     drawingSystem.draw(screen, player)
   }
 

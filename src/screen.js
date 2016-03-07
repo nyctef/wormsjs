@@ -32,6 +32,10 @@ var Screen = function(canvas) {
     this.ctx.fillRect(x, y, w, h)
   }
 
+  this.drawPixel = function(x, y, fillStyle) {
+    this.drawRect(x, y, 1, 1, fillStyle)
+  }
+
   this.putImageData = function(data) {
     this.ctx.putImageData(data, 0, 0)
   }

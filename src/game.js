@@ -1,6 +1,7 @@
 "use strict"
 import Screen from './screen'
 import * as c from './behaviours'
+import * as d from './drawing'
 import Player from './player'
 import countFrame from './fps'
 import Map from './map'
@@ -34,6 +35,7 @@ window.game = (function() {
   var keyboardInputSystem = new c.KeyboardInputSystem()
   var velocitySystem = new c.VelocitySystem()
   var playerControlSystem = new c.PlayerControlSystem()
+  var drawingSystem = new d.DrawingSystem()
 
   function update() {
     velocitySystem.start_frame(game)
@@ -45,51 +47,14 @@ window.game = (function() {
     velocitySystem.apply_move_plan(game, player)
   }
 
-  function drawIsEdge(mapData, mapRender) {
-    for (var i=0; i< mapData.length; i++) {
-      if (mapData[i].isEdge) {
-        mapRender.data[(i*4)+0] = 255
-        mapRender.data[(i*4)+3] = 255
-      }
-    }
-  }
-
-  function setPixel(target, x, y, r, g, b, a) {
-      target.data[(y*target.width*4)+x*4] = r
-      target.data[(y*target.width*4)+x*4+1] = g
-      target.data[(y*target.width*4)+x*4+2] = b
-      target.data[(y*target.width*4)+x*4+3] = a
-  }
-
-  function drawLine(target, x0, y0, x1, y1) {
-    // https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
-    // http://stackoverflow.com/a/4672319/895407
-    var dx = Math.abs(x1-x0)
-    var dy = Math.abs(y1-y0)
-    var sx = (x0 < x1) ? 1 : -1
-    var sy = (y0 < y1) ? 1 : -1
-    var err = dx-dy
-
-    while(true) {
-      setPixel(target, x0, y0, 255, 0, 0, 255)
-
-      if ((x0==x1) && (y0==y1)) break
-      var e2 = 2*err
-      if (e2 >-dy){ err -= dy; x0  += sx }
-      if (e2 < dx){ err += dx; y0  += sy }
-    }
-  }
 
   function draw() {
     // copy map background into mapRender
     game.mapRender.data.set(game.map.getImageData().data)
 
-    if (game.options.drawEdgePixelData) {
-      drawIsEdge(game.map.getMapData(), game.mapRender)
-    }
-
+    drawingSystem.drawDebugData(screen, game)
     screen.putImageData(game.mapRender)
-    player.draw(screen)
+    drawingSystem.draw(screen, player)
   }
 
   // define main game loop

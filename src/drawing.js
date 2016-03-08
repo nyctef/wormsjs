@@ -5,6 +5,19 @@ function DrawingSystem() {
       var rect = appearance.data
       screen.drawRect(entity.position.x, entity.position.y,
                       rect.height, rect.width, rect.color)
+    } else if (appearance.type == 'shape') {
+      var size = appearance.data.size
+      var shape = appearance.data.shape
+      var color = appearance.data.color
+      for (var x=0; x<size.width; x++) {
+        for (var y=0; y<size.height; y++) {
+          if (shape[y*size.width + x]) {
+            screen.drawPixel(entity.position.x + x,
+                             entity.position.y + y,
+                             color)
+          }
+        }
+      }
     } else {
       throw 'appearance not handled: ' + appearance.type
     }

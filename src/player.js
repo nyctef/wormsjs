@@ -7,9 +7,19 @@ var Player = function() {
   this.velocity = new c.VelocityComponent(0, 0)
   this.move_plan = new c.MovePlanComponent(0, 0)
   this.player_state = new c.PlayerStateComponent()
-  this.appearance = new d.AppearanceComponent('rectangle', {
-    width: 1,
-    height: 1,
+  this.size = { width: 5, height: 7 }
+  this.shape = [
+    0,0,1,0,0,
+    0,1,1,1,0,
+    1,1,1,1,1,
+    1,1,1,1,1,
+    1,1,1,1,1,
+    0,1,1,1,0,
+    0,0,1,0,0,
+  ]
+  this.appearance = new d.AppearanceComponent('shape', {
+    size: this.size,
+    shape: this.shape,
     color: 'green'
   })
 

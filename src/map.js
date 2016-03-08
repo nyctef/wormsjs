@@ -67,7 +67,7 @@ function Map(initialImageData) {
     return this._mapData[(y*this._w) + x]
   }
 
-  function castLine(isEdge, x0, y0, x1, y1) {
+  this.castLine = function(predicate, x0, y0, x1, y1) {
     // based on drawLine/Bresenham's - iterate along the line and stop if we see an edge
     var dx = Math.abs(x1-x0)
     var dy = Math.abs(y1-y0)
@@ -76,7 +76,7 @@ function Map(initialImageData) {
     var err = dx-dy
 
     while(true) {
-      if (isEdge(x0, y0)) { return new Point(x0, y0) }
+      if (predicate(x0, y0)) { return new Point(x0, y0) }
 
       if ((x0==x1) && (y0==y1)) { return null }
       var e2 = 2*err
@@ -85,9 +85,9 @@ function Map(initialImageData) {
     }
   }
 
-  this.castLine = function(x0, y0, x1, y1) {
+  this.castLineToEdge = function(x0, y0, x1, y1) {
     var isEdge = (x, y) => this.mapDataAt(x, y).isEdge
-    return castLine(isEdge, x0, y0, x1, y1)
+    return this.castLine(isEdge, x0, y0, x1, y1)
   }
 
   this.explodeHole = function(x0, y0, radius) {

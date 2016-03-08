@@ -75,8 +75,8 @@ var VelocitySystem = function() {
     if (entity.move_plan.x != 0) { 
       // todo: this assumes move_plan.x is 1 at most
       var maxClimbY = entity.position.y - 2
-      var wallAhead = game.map.castLine(entity.position.x + entity.move_plan.x, maxClimbY,
-                                    entity.position.x + entity.move_plan.x, entity.position.y)
+      var wallAhead = game.map.castLineToEdge(entity.position.x + entity.move_plan.x, maxClimbY,
+                                              entity.position.x + entity.move_plan.x, entity.position.y)
       if (wallAhead) {
         if (wallAhead.y != maxClimbY) {
           console.log(`climbing with move_plan.y = ${entity.move_plan.y}`)
@@ -94,7 +94,7 @@ var VelocitySystem = function() {
 
     if (entity.move_plan.y > 0) { // TODO: should this check for FALLING instead? are those equivalent?
       // check for an edge up to two pixels below us
-      var edgeBelow = game.map.castLine(entity.position.x, entity.position.y+1,
+      var edgeBelow = game.map.castLineToEdge(entity.position.x, entity.position.y+1,
                                     entity.position.x, entity.position.y+2)
       if (edgeBelow) {
         console.log('collision with ground')

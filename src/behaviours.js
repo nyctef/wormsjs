@@ -13,9 +13,9 @@ var KeyboardInputSystem = function() {
   this.update = function(game, entity) {
     if (!entity.keyboard_input) { return }
     
-    var left = this.keyboard.isDown(this.keyboard.Keys.LEFT)
-    var right = this.keyboard.isDown(this.keyboard.Keys.RIGHT)
-    var space = this.keyboard.isDown(this.keyboard.Keys.SPACE)
+    var left = this.keyboard.isDown(Keyboard.Keys.LEFT)
+    var right = this.keyboard.isDown(Keyboard.Keys.RIGHT)
+    var space = this.keyboard.isDown(Keyboard.Keys.SPACE)
 
     if (left && right) { left = right = false }
 

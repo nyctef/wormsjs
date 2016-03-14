@@ -1,23 +1,31 @@
 var Keyboard = function() {
   // based on https://vimeo.com/105955605
-  var keyState = {}
+  // TODO: make this work cross-browser (and just expose Keys / isDown as the API)
+  var _keyState = {}
+  var _keyUpHandlers = []
 
-  window.onkeydown = function(e) {
-    keyState[e.keyCode] = true
-  }
+  window.addEventListener('keydown', function(e) {
+    _keyState[e.keyCode] = true
+  })
 
-  window.onkeyup = function(e) {
-    keyState[e.keyCode] = false
-  }
+  window.addEventListener('keyup', function(e) {
+    _keyState[e.keyCode] = false
+    _keyUpHandlers.forEach(x => { x(e.keyCode) })
+  })
 
   this.isDown = function(keyCode) {
-    return keyState[keyCode] === true
+    return _keyState[keyCode] === true
   }
 
-  this.Keys = {
+  Keyboard.Keys = {
     LEFT: 37,
     RIGHT: 39,
     SPACE: 32,
+    P: 80,
+  }
+
+  this.addKeyUpHandler = function(func) {
+    _keyUpHandlers.push(func)
   }
 }
 

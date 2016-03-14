@@ -66,6 +66,8 @@ other notes:
 perf notes:
 - rope "physics":
   - http://gamedev.stackexchange.com/questions/558/implementing-a-wrapping-wire-like-the-worms-ninja-rope-in-a-2d-physics-engine
+tool/engine integration:
+ - http://bitsquid.blogspot.co.uk/2010/04/our-tool-architecture.html
 
 - http://jsperf.com/canvas-pixel-manipulation/30 - maybe use 32bit views on pixel data rather than 8bit ones
 - https://www.smashingmagazine.com/2012/11/writing-fast-memory-efficient-javascript/

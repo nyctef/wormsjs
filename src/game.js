@@ -5,6 +5,7 @@ import * as d from './drawing'
 import Player from './player'
 import countFrame from './fps'
 import Map from './map'
+import Keyboard from './keyboard'
 
 window.game = (function() {
 
@@ -34,7 +35,8 @@ window.game = (function() {
 
 
   game.options = {
-    drawEdgePixelData: true
+    drawEdgePixelData: true,
+    paused: false,
   }
 
   var keyboardInputSystem = new c.KeyboardInputSystem()
@@ -65,10 +67,12 @@ window.game = (function() {
 
   // define main game loop
   game.loop = function() {
-    var tdelta = countFrame()
+    if (!game.options.paused) {
+      var tdelta = countFrame()
 
-    update()
-    draw()
+      update()
+      draw()
+    }
     
     window.requestAnimationFrame(game.loop)
     //window.setTimeout(game.loop, 0)
@@ -82,6 +86,12 @@ window.game = (function() {
     var my = Math.round(y * canvas.height / canvas.offsetHeight)
     console.log(`registered click at ${x},${y} (${mx},${my})`)
     game.map.explodeHole(mx, my, 10)
+  })
+
+  new Keyboard().addKeyUpHandler(function(key) {
+    if (key == Keyboard.Keys.P) {
+      game.options.paused = !game.options.paused
+    }
   })
 
   // start the game running

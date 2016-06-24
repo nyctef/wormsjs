@@ -9,7 +9,6 @@ import Map from './map'
 window.game = (function() {
 
   var canvas = document.getElementById('screen')
-  var canvasParent = canvas.parentNode
   var screen = new Screen(canvas)
 
   var game = {}
@@ -65,7 +64,7 @@ window.game = (function() {
 
   // define main game loop
   game.loop = function() {
-    var tdelta = countFrame()
+    /*var tdelta = */countFrame()
 
     update()
     draw()

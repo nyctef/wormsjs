@@ -1,5 +1,6 @@
 import Keyboard from './keyboard'
 import * as c from './behaviours'
+import log from 'loglevel'
 
 var KeyboardInputComponent = function() {
   this.left = false
@@ -48,6 +49,7 @@ function sign(x) {
 }
 
 var VelocitySystem = function() {
+  this.log = log.getLogger('VelocitySystem')
   this.frame_counter = 0
   this.start_frame = function(game) {
     this.frame_counter++
@@ -95,15 +97,15 @@ var VelocitySystem = function() {
         entity.position.x + entity.move_plan.x, maxClimbY,
         entity.position.x + entity.move_plan.x, entity.position.y)
       if (wallAhead) {
-        console.log(`${wallAhead.y} vs ${maxClimbY}`)
+        this.log.debug(`${wallAhead.y} vs ${maxClimbY}`)
         //if (wallAhead.y != maxClimbY) {
         if (true) {
-          console.log(`climbing with move_plan.y = ${entity.move_plan.y}`)
+          this.log.debug(`climbing with move_plan.y = ${entity.move_plan.y}`)
           entity.move_plan.y = wallAhead.y - entity.position.y - 1
-          console.log(`..set move_plan.y to ${entity.move_plan.y} (=${wallAhead.y} - ${entity.position.y} - 1)`)
+          this.log.debug(`..set move_plan.y to ${entity.move_plan.y} (=${wallAhead.y} - ${entity.position.y} - 1)`)
         }
         else {
-          console.log('collision with wall')
+          this.log.debug('collision with wall')
           // a collision happened
           entity.velocity.x = 0
           entity.move_plan.x = 0
@@ -118,7 +120,7 @@ var VelocitySystem = function() {
     if (entity.move_plan.y > 0) { // TODO: should this check for FALLING instead? are those equivalent?
       // check for an edge up to two pixels below us
       if (edgeBelow) {
-        console.log('collision with ground')
+        this.log.debug('collision with ground')
         entity.position.x = edgeBelow.x
         entity.position.y = edgeBelow.y-1
         entity.velocity.y = 0
@@ -128,7 +130,7 @@ var VelocitySystem = function() {
     } 
     
     if (!edgeBelow) {
-      console.log('starting to fall')
+      this.log.debug('starting to fall')
       entity.player_state.state = c.PlayerStateComponent.FALLING
       entity.velocity.y = 60
     }

@@ -24,7 +24,7 @@ gulp.task('es6', function() {
 });
  
 gulp.task('watch',function() {
-	gulp.watch(files.js,['es6'])
+  gulp.watch(files.js,['es6'])
 });
 
 gulp.task('lint', function() {

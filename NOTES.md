@@ -1,25 +1,3 @@
-TODO next (?):
-
-- rectangle player collision instead of single pixel? At least to not fall into
-  a gap of only a single pixel
-- dump 4x scaling and show at real size
-- accelerated falling and jumping for some more interesting movement
-- show player aiming line and spacebar to destroy circle in line of sight
-
-TODO later:
-
-- consolidate components and systems - currently they're probably way too
-  finely-grained to be efficient. Easier to merge small things than to split
-  apart large things, though, so put this off for as long as possible
-
-other ideas:
-
-- pull out edgepixeldata into another class
-- try to recompute edgepixeldata as little as possible
-- climbing/jumping/falling for Player - pull out state machine
-- click to make holes, update edgepixeldata and test climbing
-- shortcuts for options (eg toggleDrawEdgePixelData())
-- https://github.com/jaxbot/browserlink.vim
 
 Pathfinding: 
 
@@ -70,6 +48,7 @@ perf notes:
 - http://jsperf.com/canvas-pixel-manipulation/30 - maybe use 32bit views on pixel data rather than 8bit ones
 - https://www.smashingmagazine.com/2012/11/writing-fast-memory-efficient-javascript/
 - http://blog.getify.com/sanity-check-object-creation-performance/
+- http://www.gamasutra.com/view/news/207954/Vlambeer_cofounder_shares_advice_on_building_better_action_games.php
 
 entity-component systems:
 

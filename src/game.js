@@ -1,6 +1,8 @@
 "use strict"
 import Screen from './screen'
-import * as c from './behaviours'
+import KeyboardInputSystem from './keyboard-input-system'
+import VelocitySystem from './velocity-system'
+import PlayerControlSystem from './player-control-system'
 import * as d from './drawing'
 import Player from './player'
 import countFrame from './fps'
@@ -36,9 +38,9 @@ window.game = (function() {
     drawEdgePixelData: true
   }
 
-  var keyboardInputSystem = new c.KeyboardInputSystem()
-  var velocitySystem = new c.VelocitySystem()
-  var playerControlSystem = new c.PlayerControlSystem()
+  var keyboardInputSystem = new KeyboardInputSystem()
+  var velocitySystem = new VelocitySystem()
+  var playerControlSystem = new PlayerControlSystem()
   var drawingSystem = new d.DrawingSystem()
 
   function update() {

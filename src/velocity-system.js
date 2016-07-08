@@ -1,46 +1,5 @@
-import Keyboard from './keyboard'
-import * as c from './behaviours'
 import log from 'loglevel'
-
-var KeyboardInputComponent = function() {
-  this.left = false
-  this.right = false
-  this.jump = false
-  this.fire = false
-}
-
-var KeyboardInputSystem = function() {
-  this.keyboard = new Keyboard()
-  this.update = function(game, entity) {
-    if (!entity.keyboard_input) { return }
-    
-    var left = this.keyboard.isDown(this.keyboard.Keys.LEFT)
-    var right = this.keyboard.isDown(this.keyboard.Keys.RIGHT)
-    var space = this.keyboard.isDown(this.keyboard.Keys.SPACE)
-
-    if (left && right) { left = right = false }
-
-    entity.keyboard_input.left = left
-    entity.keyboard_input.right = right
-    entity.keyboard_input.jump = space
-  }
-}
-
-var PositionComponent = function(x, y) {
-  this.x = x || 0
-  this.y = y || 0
-}
-
-var MovePlanComponent = function(x, y) {
-  this.x = x || 0
-  this.y = y || 0
-}
-
-// measured in pixels per second (eg 60 would be one pixel per frame)
-var VelocityComponent = function(dx, dy) {
-  this.dx = dx || 0
-  this.dy = dy || 0
-}
+import PlayerStateComponent from './playerstate-component'
 
 function sign(x) {
   if (x < 0) return -1
@@ -125,13 +84,13 @@ var VelocitySystem = function() {
         entity.position.y = edgeBelow.y-1
         entity.velocity.y = 0
         entity.move_plan.y = 0
-        entity.player_state.state = c.PlayerStateComponent.STANDING
+        entity.player_state.state = PlayerStateComponent.STANDING
       }
     } 
     
     if (!edgeBelow) {
       this.log.debug('starting to fall')
-      entity.player_state.state = c.PlayerStateComponent.FALLING
+      entity.player_state.state = PlayerStateComponent.FALLING
       entity.velocity.y = 60
     }
   }
@@ -143,53 +102,4 @@ var VelocitySystem = function() {
 
 }
 
-var PlayerStateComponent = function() {
-  PlayerStateComponent.FALLING = 0
-  PlayerStateComponent.STANDING = 1
-  PlayerStateComponent.WALKING = 2
-
-  this.state = PlayerStateComponent.FALLING
-  // TODO: also need to store state data in here?
-}
-
-var PlayerControlSystem = function() {
-  // TODO: this should probably be the only entity actually on a player (KeyboardInputSystem doesn't need to be duplicated everywhere)
-  this.update = function(game, entity) {
-    if (entity.player_state.state == c.PlayerStateComponent.STANDING) {
-      this.standing(entity)
-    } else if (entity.player_state.state == c.PlayerStateComponent.WALKING) {
-      this.walking(entity)
-    }
-  }
-
-  this.standing = function(entity) {
-    if (entity.keyboard_input.left || entity.keyboard_input.right) {
-      entity.player_state.state = c.PlayerStateComponent.WALKING
-      return
-    }
-  }
-
-  this.walking = function (entity) {
-    // start moving left or right if the keyboard buttons are held
-    var sx
-    if (entity.keyboard_input.left) {
-      sx = -1
-    } else if (entity.keyboard_input.right) {
-      sx = +1
-    } else {
-      entity.velocity.x = 0
-      entity.player_state.state = c.PlayerStateComponent.STANDING
-      return
-    }
-    entity.velocity.x = sx * 10
-  }
-}
-
-export {
-  KeyboardInputComponent, KeyboardInputSystem,
-  PlayerControlSystem,
-  VelocityComponent, VelocitySystem,
-  PositionComponent,
-  MovePlanComponent,
-  PlayerStateComponent,
-}
+export default VelocitySystem

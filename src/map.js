@@ -72,7 +72,9 @@ function Map(initialImageData) {
     return this._mapData[(y*this._w) + x]
   }
 
-  this.castLine = function(predicate, x0, y0, x1, y1) {
+  var noop = () => {}
+
+  this.castLine = function(predicate, x0, y0, x1, y1, doLog=noop) {
     // based on drawLine/Bresenham's - iterate along the line and stop if we see an edge
     var dx = Math.abs(x1-x0)
     var dy = Math.abs(y1-y0)
@@ -81,14 +83,14 @@ function Map(initialImageData) {
     var err = dx-dy
 
     while(true) {
-      this.log.debug(`checking predicate at ${x0},${y0}`)
+      doLog(`castLine: checking predicate at ${x0},${y0}`)
       if (predicate(x0, y0)) { 
-        this.log.debug(`predicate returned true at ${x0},${y0}`)
+        doLog(`castLine: predicate returned true at ${x0},${y0}`)
         return new Point(x0, y0)
       }
 
       if ((x0==x1) && (y0==y1)) {
-        this.log.debug(`reached end of the line at ${x0},${y0}`)
+        doLog(`castLine: reached end of the line at ${x0},${y0}`)
         return null
       }
       var e2 = 2*err

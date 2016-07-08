@@ -10,7 +10,6 @@ function sign(x) {
 var VelocitySystem = function() {
   this.log = log.getLogger('VelocitySystem')
   this.log.setLevel('debug')
-  log.setLevel('debug')
   this.frame_counter = 0
   this.start_frame = function(game) {
     this.frame_counter++
@@ -34,7 +33,9 @@ var VelocitySystem = function() {
     if (this.frame_counter % (60 / dy) == 0) { entity.move_plan.y = sy } else { entity.move_plan.y = 0 }
   }
 
-  function getCollisionPredicate(game, entity) {
+  var noop = () => {}
+
+  function getCollisionPredicate(game, entity, doLog=noop) {
     return (x0, y0) => {
       var size = entity.size
       var shape = entity.shape
@@ -42,7 +43,7 @@ var VelocitySystem = function() {
         for (var y=0; y<size.height; y++) {
           if (shape[y*size.width + x] &&
               game.map.mapDataAt(x0 + x, y0 + y).isEdge) {
-            log.debug(`found a collision between position ${x},${y} in shape with point ${x0 + x},${y0 + y} in map`)
+            doLog(`found a collision between position ${x},${y} in shape with point ${x0 + x},${y0 + y} in map`)
             return true
           }
         }
@@ -61,9 +62,10 @@ var VelocitySystem = function() {
                      `from ${entity.position.x + entity.move_plan.x},${maxClimbY} ` +
                      `to   ${entity.position.x + entity.move_plan.x},${entity.position.y}`)
       var wallAhead = game.map.castLine(
-        getCollisionPredicate(game, entity),
+        getCollisionPredicate(game, entity, this.log.debug),
         entity.position.x + entity.move_plan.x, maxClimbY,
-        entity.position.x + entity.move_plan.x, entity.position.y)
+        entity.position.x + entity.move_plan.x, entity.position.y,
+        this.log.debug)
       if (wallAhead) {
         this.log.debug(`checking slope ahead of entity: ${wallAhead.y} vs ${maxClimbY}`)
         if (wallAhead.y != maxClimbY) {

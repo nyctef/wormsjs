@@ -10,6 +10,7 @@ function sign(x) {
 var VelocitySystem = function() {
   this.log = log.getLogger('VelocitySystem')
   this.log.setLevel('debug')
+  log.setLevel('debug')
   this.frame_counter = 0
   this.start_frame = function(game) {
     this.frame_counter++
@@ -53,13 +54,18 @@ var VelocitySystem = function() {
     if (entity.move_plan.x != 0) { 
       // todo: this assumes move_plan.x is 1 at most
       if (entity.move_plan.x > 1) { this.log.warn("don't know how to deal with a moveplan >1 px"); }
+      // todo: this position -2 can put us over the top of the map (which is an edge by default) even if the 
+      // entity's position isn't touching the edge yet
       var maxClimbY = entity.position.y - 2
+      this.log.debug(`checking for a wall in front of us (position ${entity.position.x},${entity.position.y}) ` +
+                     `from ${entity.position.x + entity.move_plan.x},${maxClimbY} ` +
+                     `to   ${entity.position.x + entity.move_plan.x},${entity.position.y}`)
       var wallAhead = game.map.castLine(
         getCollisionPredicate(game, entity),
         entity.position.x + entity.move_plan.x, maxClimbY,
         entity.position.x + entity.move_plan.x, entity.position.y)
       if (wallAhead) {
-        this.log.debug(`${wallAhead.y} vs ${maxClimbY}`)
+        this.log.debug(`checking slope ahead of entity: ${wallAhead.y} vs ${maxClimbY}`)
         if (wallAhead.y != maxClimbY) {
           this.log.debug(`climbing with move_plan.y = ${entity.move_plan.y}`)
           entity.move_plan.y = wallAhead.y - entity.position.y - 1
@@ -80,6 +86,9 @@ var VelocitySystem = function() {
       var edgeBelow = game.map.castLine(
         getCollisionPredicate(game, entity),
         x0, y0, x1, y1);
+    if (edgeBelow) {
+      this.log.debug(`edgeBelow found at ${edgeBelow.x},${edgeBelow.y}`)
+    }
     if (entity.move_plan.y > 0) { // TODO: should this check for FALLING instead? are those equivalent?
       // check for an edge up to two pixels below us
       if (edgeBelow) {
@@ -91,7 +100,7 @@ var VelocitySystem = function() {
         entity.player_state.state = PlayerStateComponent.STANDING
       }
     } 
-    
+
     if (!edgeBelow) {
       this.log.debug('starting to fall')
       entity.player_state.state = PlayerStateComponent.FALLING

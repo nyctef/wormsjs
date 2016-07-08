@@ -82,9 +82,15 @@ function Map(initialImageData) {
 
     while(true) {
       this.log.debug(`checking predicate at ${x0},${y0}`)
-      if (predicate(x0, y0)) { return new Point(x0, y0) }
+      if (predicate(x0, y0)) { 
+        this.log.debug(`predicate returned true at ${x0},${y0}`)
+        return new Point(x0, y0)
+      }
 
-      if ((x0==x1) && (y0==y1)) { return null }
+      if ((x0==x1) && (y0==y1)) {
+        this.log.debug(`reached end of the line at ${x0},${y0}`)
+        return null
+      }
       var e2 = 2*err
       if (e2 >-dy){ err -= dy; x0  += sx }
       if (e2 < dx){ err += dx; y0  += sy }

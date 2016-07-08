@@ -1,3 +1,5 @@
+import log from 'loglevel'
+
 function PixelData() {
   this.isEdge = false
 }
@@ -42,6 +44,9 @@ function Map(initialImageData) {
   this._w = initialImageData.width
   this._h = initialImageData.height
 
+  this.log = log.getLogger('Map')
+  this.log.setLevel('debug')
+
   this._mapData = new Array(this._w*this._h)
   for (var i=0; i<this._w*this._h; i++) { 
     this._mapData[i] = new PixelData()
@@ -76,6 +81,7 @@ function Map(initialImageData) {
     var err = dx-dy
 
     while(true) {
+      this.log.debug(`checking predicate at ${x0},${y0}`)
       if (predicate(x0, y0)) { return new Point(x0, y0) }
 
       if ((x0==x1) && (y0==y1)) { return null }

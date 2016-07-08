@@ -9,6 +9,7 @@ function sign(x) {
 
 var VelocitySystem = function() {
   this.log = log.getLogger('VelocitySystem')
+  this.log.setLevel('debug')
   this.frame_counter = 0
   this.start_frame = function(game) {
     this.frame_counter++
@@ -39,7 +40,8 @@ var VelocitySystem = function() {
       for (var x=0; x<size.width; x++) {
         for (var y=0; y<size.height; y++) {
           if (shape[y*size.width + x] &&
-              game.map.mapDataAt(entity.position.x + x, entity.position.y + y).isEdge) {
+              game.map.mapDataAt(x0 + x, y0 + y).isEdge) {
+            log.debug(`found a collision between position ${x},${y} in shape with point ${x0 + x},${y0 + y} in map`)
             return true
           }
         }
@@ -50,6 +52,7 @@ var VelocitySystem = function() {
   this.check_collisions = function(game, entity) {
     if (entity.move_plan.x != 0) { 
       // todo: this assumes move_plan.x is 1 at most
+      if (entity.move_plan.x > 1) { this.log.warn("don't know how to deal with a moveplan >1 px"); }
       var maxClimbY = entity.position.y - 2
       var wallAhead = game.map.castLine(
         getCollisionPredicate(game, entity),
@@ -57,8 +60,7 @@ var VelocitySystem = function() {
         entity.position.x + entity.move_plan.x, entity.position.y)
       if (wallAhead) {
         this.log.debug(`${wallAhead.y} vs ${maxClimbY}`)
-        //if (wallAhead.y != maxClimbY) {
-        if (true) {
+        if (wallAhead.y != maxClimbY) {
           this.log.debug(`climbing with move_plan.y = ${entity.move_plan.y}`)
           entity.move_plan.y = wallAhead.y - entity.position.y - 1
           this.log.debug(`..set move_plan.y to ${entity.move_plan.y} (=${wallAhead.y} - ${entity.position.y} - 1)`)
@@ -72,14 +74,16 @@ var VelocitySystem = function() {
       }
     }
 
+    var x0 = entity.position.x, x1 = entity.position.x;
+    var y0 = entity.position.y, y1 = entity.position.y + 2;
+    this.log.debug(`checking for an edge below us (position ${entity.position.x},${entity.position.y}) from ${x0},${y0} to ${x1},${y1}`)
       var edgeBelow = game.map.castLine(
         getCollisionPredicate(game, entity),
-        entity.position.x, entity.position.y+1,
-        entity.position.x, entity.position.y+2)
+        x0, y0, x1, y1);
     if (entity.move_plan.y > 0) { // TODO: should this check for FALLING instead? are those equivalent?
       // check for an edge up to two pixels below us
       if (edgeBelow) {
-        this.log.debug('collision with ground')
+        this.log.debug(`collision with ground at ${edgeBelow.x},${edgeBelow.y}: setting position to ${edgeBelow.x},${edgeBelow.y-1}, vy to 0 and mpy to 0`)
         entity.position.x = edgeBelow.x
         entity.position.y = edgeBelow.y-1
         entity.velocity.y = 0

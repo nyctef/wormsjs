@@ -1,3 +1,6 @@
+import log from 'loglevel'
+var fpsLog = log.getLogger('fps')
+
 // set up an fps counter
 var countFrame = (function() {
   var lastFrameStartTime = performance.now()
@@ -8,7 +11,7 @@ var countFrame = (function() {
     var now = performance.now()
     var diffMs = now - frameCountStartTime
     var diffSecs = diffMs / 1000
-    console.log('fps: ' + (frameCount / diffSecs).toFixed(2))
+    fpsLogger.info('fps: ' + (frameCount / diffSecs).toFixed(2))
 
     frameCountStartTime = now
     frameCount = 0

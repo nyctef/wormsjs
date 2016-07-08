@@ -8,16 +8,19 @@ import Player from './player'
 import countFrame from './fps'
 import Map from './map'
 
+import log from 'loglevel'
+
 window.game = (function() {
 
   var canvas = document.getElementById('screen')
   var screen = new Screen(canvas)
 
   var game = {}
+  game.log = log.getLogger('game')
 
   game.size = { x: canvas.width, y: canvas.height }
 
-  console.log(game.size)
+  log.debug(`game size: ${game.size.x},${game.size.y}`)
 
   // define some starting geometry
   // TODO: move this onto Map functions? or maybe a separate LoadMap thing?
@@ -76,18 +79,18 @@ window.game = (function() {
   }
 
   canvas.addEventListener('click', function(clickEvent) {
-    console.log(clickEvent)
+    log.debug(clickEvent)
     var x = clickEvent.pageX - canvas.offsetLeft
     var y = clickEvent.pageY - canvas.offsetTop
     var mx = Math.round(x * canvas.width / canvas.offsetWidth)
     var my = Math.round(y * canvas.height / canvas.offsetHeight)
-    console.log(`registered click at ${x},${y} (${mx},${my})`)
+    log.debug(`registered click at ${x},${y} (${mx},${my})`)
     game.map.explodeHole(mx, my, 10)
   })
 
   // start the game running
   game.loop()
 
-  console.log(game)
+  log.info(game)
   return game
 })()

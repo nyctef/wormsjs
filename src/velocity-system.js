@@ -89,12 +89,12 @@ var VelocitySystem = function() {
 
     var x0 = pos.x, x1 = pos.x;
     var y0 = pos.y, y1 = pos.y + 2;
-    this.log.debug(`checking for an edge below us (position ${pos.x},${pos.y}) from ${x0},${y0} to ${x1},${y1}`)
+    //this.log.debug(`checking for an edge below us (position ${pos.x},${pos.y}) from ${x0},${y0} to ${x1},${y1}`)
       var edgeBelow = game.map.castLine(
         getCollisionPredicate(game, entity),
         x0, y0, x1, y1);
     if (edgeBelow) {
-      this.log.debug(`edgeBelow found at ${edgeBelow.x},${edgeBelow.y}`)
+      //this.log.debug(`edgeBelow found at ${edgeBelow.x},${edgeBelow.y}`)
     }
     if (mp.y > 0) { // TODO: should this check for FALLING instead? are those equivalent?
       // check for an edge up to two pixels below us

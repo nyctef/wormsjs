@@ -25,11 +25,11 @@ window.game = (function() {
   // define some starting geometry
   // TODO: move this onto Map functions? or maybe a separate LoadMap thing?
   var player = new Player()
-  screen.drawRect(0, 10, 100, 1, 'black')
-  screen.drawRect(20, 9, 2, 2, 'black')
-  screen.drawRect(30, 8, 3, 3, 'black')
-  screen.drawRect(40, 7, 4, 4, 'black')
-  screen.drawRect(50, 5, 5, 5, 'black')
+  screen.drawRect(0,  15, 100, 1, 'black')
+  screen.drawRect(20, 14, 2, 2, 'black')
+  screen.drawRect(30, 13, 3, 3, 'black')
+  screen.drawRect(40, 12, 4, 4, 'black')
+  screen.drawRect(50, 10, 5, 5, 'black')
   player.position.x = 0
   player.position.y = 0
 

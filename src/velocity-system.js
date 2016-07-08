@@ -52,61 +52,66 @@ var VelocitySystem = function() {
   }
 
   this.check_collisions = function(game, entity) {
-    if (entity.move_plan.x != 0) { 
+    var pos = entity.position
+    var mp = entity.move_plan
+    var ps = entity.player_state
+    var v = entity.velocity
+
+    if (mp.x != 0) { 
       // todo: this assumes move_plan.x is 1 at most
-      if (entity.move_plan.x > 1) { this.log.warn("don't know how to deal with a moveplan >1 px"); }
+      if (mp.x > 1) { this.log.warn("don't know how to deal with a moveplan >1 px"); }
       // todo: this position -2 can put us over the top of the map (which is an edge by default) even if the 
       // entity's position isn't touching the edge yet
-      var maxClimbY = entity.position.y - 2
-      this.log.debug(`checking for a wall in front of us (position ${entity.position.x},${entity.position.y}) ` +
-                     `from ${entity.position.x + entity.move_plan.x},${maxClimbY} ` +
-                     `to   ${entity.position.x + entity.move_plan.x},${entity.position.y}`)
+      var maxClimbY = pos.y - 2
+      this.log.debug(`checking for a wall in front of us (position ${pos.x},${pos.y}) ` +
+                     `from ${pos.x + mp.x},${maxClimbY} ` +
+                     `to   ${pos.x + mp.x},${pos.y}`)
       var wallAhead = game.map.castLine(
         getCollisionPredicate(game, entity, this.log.debug),
-        entity.position.x + entity.move_plan.x, maxClimbY,
-        entity.position.x + entity.move_plan.x, entity.position.y,
+        pos.x + mp.x, maxClimbY,
+        pos.x + mp.x, pos.y,
         this.log.debug)
       if (wallAhead) {
         this.log.debug(`checking slope ahead of entity: ${wallAhead.y} vs ${maxClimbY}`)
         if (wallAhead.y != maxClimbY) {
-          this.log.debug(`climbing with move_plan.y = ${entity.move_plan.y}`)
-          entity.move_plan.y = wallAhead.y - entity.position.y - 1
-          this.log.debug(`..set move_plan.y to ${entity.move_plan.y} (=${wallAhead.y} - ${entity.position.y} - 1)`)
+          this.log.debug(`climbing with move_plan.y = ${mp.y}`)
+          mp.y = wallAhead.y - pos.y - 1
+          this.log.debug(`..set move_plan.y to ${mp.y} (=${wallAhead.y} - ${pos.y} - 1)`)
         }
         else {
           this.log.debug('collision with wall')
           // a collision happened
-          entity.velocity.x = 0
-          entity.move_plan.x = 0
+          v.x = 0
+          mp.x = 0
         }
       }
     }
 
-    var x0 = entity.position.x, x1 = entity.position.x;
-    var y0 = entity.position.y, y1 = entity.position.y + 2;
-    this.log.debug(`checking for an edge below us (position ${entity.position.x},${entity.position.y}) from ${x0},${y0} to ${x1},${y1}`)
+    var x0 = pos.x, x1 = pos.x;
+    var y0 = pos.y, y1 = pos.y + 2;
+    this.log.debug(`checking for an edge below us (position ${pos.x},${pos.y}) from ${x0},${y0} to ${x1},${y1}`)
       var edgeBelow = game.map.castLine(
         getCollisionPredicate(game, entity),
         x0, y0, x1, y1);
     if (edgeBelow) {
       this.log.debug(`edgeBelow found at ${edgeBelow.x},${edgeBelow.y}`)
     }
-    if (entity.move_plan.y > 0) { // TODO: should this check for FALLING instead? are those equivalent?
+    if (mp.y > 0) { // TODO: should this check for FALLING instead? are those equivalent?
       // check for an edge up to two pixels below us
       if (edgeBelow) {
         this.log.debug(`collision with ground at ${edgeBelow.x},${edgeBelow.y}: setting position to ${edgeBelow.x},${edgeBelow.y-1}, vy to 0 and mpy to 0`)
-        entity.position.x = edgeBelow.x
-        entity.position.y = edgeBelow.y-1
-        entity.velocity.y = 0
-        entity.move_plan.y = 0
-        entity.player_state.state = PlayerStateComponent.STANDING
+        pos.x = edgeBelow.x
+        pos.y = edgeBelow.y-1
+        v.y = 0
+        mp.y = 0
+        ps.state = PlayerStateComponent.STANDING
       }
     } 
 
     if (!edgeBelow) {
       this.log.debug('starting to fall')
-      entity.player_state.state = PlayerStateComponent.FALLING
-      entity.velocity.y = 60
+      ps.state = PlayerStateComponent.FALLING
+      v.y = 60
     }
   }
 

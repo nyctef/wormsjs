@@ -4,7 +4,7 @@
   "description": "",
   "main": "  ",
   "scripts": {
-    "test": "./node_modules/.bin/mocha --reporter spec",
+    "test": "./node_modules/.bin/mocha --compilers js:babel-core/register",
     "lint": "gulp lint",
     "build": "gulp es6"
   },

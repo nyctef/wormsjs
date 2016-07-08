@@ -72,5 +72,5 @@ function AppearanceComponent(type, data) {
 }
 
 export { 
-  DrawingSystem, AppearanceComponent
+  DrawingSystem, AppearanceComponent,
 }

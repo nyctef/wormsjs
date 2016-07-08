@@ -24,7 +24,7 @@ var Player = function() {
   this.appearance = new d.AppearanceComponent('shape', {
     size: this.size,
     shape: this.shape,
-    color: 'green'
+    color: 'green',
   })
 
 }

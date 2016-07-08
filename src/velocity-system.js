@@ -59,7 +59,7 @@ var VelocitySystem = function() {
 
     if (mp.x != 0) { 
       // todo: this assumes move_plan.x is 1 at most
-      if (mp.x > 1) { this.log.warn("don't know how to deal with a moveplan >1 px"); }
+      if (mp.x > 1) { this.log.warn("don't know how to deal with a moveplan >1 px") }
       // todo: this position -2 can put us over the top of the map (which is an edge by default) even if the 
       // entity's position isn't touching the edge yet
       var maxClimbY = pos.y - 2
@@ -87,12 +87,12 @@ var VelocitySystem = function() {
       }
     }
 
-    var x0 = pos.x, x1 = pos.x;
-    var y0 = pos.y, y1 = pos.y + 2;
+    var x0 = pos.x, x1 = pos.x
+    var y0 = pos.y, y1 = pos.y + 2
     //this.log.debug(`checking for an edge below us (position ${pos.x},${pos.y}) from ${x0},${y0} to ${x1},${y1}`)
       var edgeBelow = game.map.castLine(
         getCollisionPredicate(game, entity),
-        x0, y0, x1, y1);
+        x0, y0, x1, y1)
     if (edgeBelow) {
       //this.log.debug(`edgeBelow found at ${edgeBelow.x},${edgeBelow.y}`)
     }

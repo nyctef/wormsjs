@@ -10,6 +10,8 @@
     "rules": {
         "semi": [2, "never"],
         "no-unexpected-multiline": 2,
-        "no-unused-vars": ["warn", { "args": "none" }]
+        "no-unused-vars": ["warn", { "args": "none" }],
+        "no-constant-condition": ["warn", { "checkLoops": false }],
+        "comma-dangle": ["warn", "always-multiline"]
     }
 }

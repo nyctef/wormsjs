@@ -38,7 +38,7 @@ window.game = (function() {
 
 
   game.options = {
-    drawEdgePixelData: true
+    drawEdgePixelData: true,
   }
 
   var keyboardInputSystem = new KeyboardInputSystem()

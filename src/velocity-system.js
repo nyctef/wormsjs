@@ -24,7 +24,7 @@ var VelocitySystem = function() {
     // vel 90 => vel +1 when fc % 2 == 0 and vel +2 when fc % 2 == 1
     // will other systems start breaking if we move more than one pixel/frame?
   this.set_move_plan = function(game, entity) {
-    if (!entity.position || !entity.velocity) { return }
+    if (!entity.move_plan || !entity.velocity) { return }
     var dx = entity.velocity.x
     var dy = entity.velocity.y
     var sx = sign(dx)

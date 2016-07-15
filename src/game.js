@@ -52,7 +52,7 @@ window.game = (function() {
     keyboardInputSystem.update(game, player)
     playerControlSystem.update(game, player)
     velocitySystem.set_move_plan(game, player)
-    velocitySystem.check_collisions(game, player)
+    velocitySystem.check_collisions(game.map, player)
     velocitySystem.apply_move_plan(game, player)
   }
 

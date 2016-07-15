@@ -1,5 +1,6 @@
 import log from 'loglevel'
 import PlayerStateComponent from './playerstate-component'
+import { castLine } from './math'
 
 function sign(x) {
   if (x < 0) return -1
@@ -9,7 +10,6 @@ function sign(x) {
 
 var VelocitySystem = function() {
   this.log = log.getLogger('VelocitySystem')
-  this.log.setLevel('debug')
   this.frame_counter = 0
   this.start_frame = function(game) {
     this.frame_counter++
@@ -35,14 +35,14 @@ var VelocitySystem = function() {
 
   var noop = () => {}
 
-  function getCollisionPredicate(game, entity, doLog=noop) {
+  function getCollisionPredicate(map, entity, doLog=noop) {
     return (x0, y0) => {
       var size = entity.size
       var shape = entity.shape
       for (var x=0; x<size.width; x++) {
         for (var y=0; y<size.height; y++) {
           if (shape[y*size.width + x] &&
-              game.map.mapDataAt(x0 + x, y0 + y).isEdge) {
+              map.mapDataAt(x0 + x, y0 + y).isEdge) {
             doLog(`found a collision between position ${x},${y} in shape with point ${x0 + x},${y0 + y} in map`)
             return true
           }
@@ -51,7 +51,7 @@ var VelocitySystem = function() {
     }
   }
 
-  this.check_collisions = function(game, entity) {
+  this.check_collisions = function(map, entity) {
     var pos = entity.position
     var mp = entity.move_plan
     var ps = entity.player_state
@@ -66,8 +66,8 @@ var VelocitySystem = function() {
       this.log.debug(`checking for a wall in front of us (position ${pos.x},${pos.y}) ` +
                      `from ${pos.x + mp.x},${maxClimbY} ` +
                      `to   ${pos.x + mp.x},${pos.y}`)
-      var wallAhead = game.map.castLine(
-        getCollisionPredicate(game, entity, this.log.debug),
+      var wallAhead = castLine(
+        getCollisionPredicate(map, entity, this.log.debug),
         pos.x + mp.x, maxClimbY,
         pos.x + mp.x, pos.y,
         this.log.debug)
@@ -90,8 +90,8 @@ var VelocitySystem = function() {
     var x0 = pos.x, x1 = pos.x
     var y0 = pos.y, y1 = pos.y + 2
     //this.log.debug(`checking for an edge below us (position ${pos.x},${pos.y}) from ${x0},${y0} to ${x1},${y1}`)
-      var edgeBelow = game.map.castLine(
-        getCollisionPredicate(game, entity),
+      var edgeBelow = castLine(
+        getCollisionPredicate(map, entity),
         x0, y0, x1, y1)
     if (edgeBelow) {
       //this.log.debug(`edgeBelow found at ${edgeBelow.x},${edgeBelow.y}`)

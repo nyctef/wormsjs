@@ -60,9 +60,7 @@ var VelocitySystem = function() {
     if (mp.x != 0) { 
       // todo: this assumes move_plan.x is 1 at most
       if (mp.x > 1) { this.log.warn("don't know how to deal with a moveplan >1 px") }
-      // todo: this position -2 can put us over the top of the map (which is an edge by default) even if the 
-      // entity's position isn't touching the edge yet
-      var maxClimbY = pos.y - 2
+      var maxClimbY = Math.max(0, pos.y - 2)
       this.log.debug(`checking for a wall in front of us (position ${pos.x},${pos.y}) ` +
                      `from ${pos.x + mp.x},${maxClimbY} ` +
                      `to   ${pos.x + mp.x},${pos.y}`)

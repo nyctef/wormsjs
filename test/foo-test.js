@@ -44,7 +44,7 @@ describe('VelocitySystem', () => {
     this.vs = new VelocitySystem()
     this.game = null
     this.entity = new TestEntity()
-    log.getLogger('VelocitySystem').setLevel('silent')
+    log.getLogger('VelocitySystem').setLevel('warn')
   })
 
   describe('#set_move_plan', () => {
@@ -74,7 +74,7 @@ describe('VelocitySystem', () => {
     it('collides with a wall in front of the entity', function() {
       //log.getLogger('VelocitySystem').setLevel('trace')
 
-      var map = new TestMap(5, 8, 
+      var map = new TestMap(5, 8,
         [ 0,0,0,1,0,
           0,0,0,1,0,
           0,0,0,1,0,
@@ -97,6 +97,30 @@ describe('VelocitySystem', () => {
 
       // we've hit a wall, so we alter the move-plan to be stopped
       expect(e.move_plan.x).to.equal(0)
+    })
+
+    it("doesn't collide with the top of the map if moving right (#23)", function() {
+      var map = new TestMap(5, 8,
+        [ 0,0,0,0,0,
+          0,0,0,0,0,
+          0,0,0,0,0,
+          0,0,0,0,0,
+          0,0,0,0,0,
+          0,0,0,0,0,
+          0,0,0,0,0,
+          0,0,0,0,0 ])
+
+      var e = new TestEntity()
+      // put the entity where it is touching the top of the map
+      e.position.x = 1
+      e.position.y = 0
+      // and set it moving rightwards
+      e.move_plan.x = 1
+
+      this.vs.check_collisions(map, e)
+
+      // there isn't a wall to the right, so we should continue rightwards
+      expect(e.move_plan.x).to.equal(1)
     })
   })
 })

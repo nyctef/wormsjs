@@ -86,7 +86,7 @@ var VelocitySystem = function() {
     }
 
     var x0 = pos.x, x1 = pos.x
-    var y0 = pos.y, y1 = pos.y + 2
+    var y0 = pos.y, y1 = pos.y + 1
     //this.log.debug(`checking for an edge below us (position ${pos.x},${pos.y}) from ${x0},${y0} to ${x1},${y1}`)
       var edgeBelow = castLine(
         getCollisionPredicate(map, entity),

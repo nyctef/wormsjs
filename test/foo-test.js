@@ -122,5 +122,28 @@ describe('VelocitySystem', () => {
       // there isn't a wall to the right, so we should continue rightwards
       expect(e.move_plan.x).to.equal(1)
     })
+
+    it("falls to the ground if there is one pixel of space (#24)", function() {
+      //log.getLogger('VelocitySystem').setLevel('trace')
+      var map = new TestMap(5, 8,
+        [ 0,0,0,0,0,
+          0,0,0,0,0,
+          0,0,0,0,0,
+          0,0,0,0,0,
+          0,0,0,0,0,
+          1,1,1,1,1,
+          0,0,0,0,0,
+          0,0,0,0,0 ])
+
+      var e = new TestEntity()
+      // put the entity where it is touching the top of the map
+      e.position.x = 1
+      e.position.y = 2
+
+      this.vs.check_collisions(map, e)
+
+      // there is a gap below, so we should start falling
+      expect(e.velocity.y).to.be.above(0)
+    })
   })
 })

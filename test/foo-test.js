@@ -50,6 +50,23 @@ function TestMap(width, height, data) {
   }
 }
 
+function testMapFactory(opts) {
+  var defaultData = [
+    0,0,0,0,0,
+    0,0,0,0,0,
+    0,0,0,0,0,
+    0,0,0,0,0,
+    0,0,0,0,0,
+    0,0,0,0,0,
+    0,0,0,0,0,
+    0,0,0,0,0,
+  ]
+  return new TestMap(
+    opts.w || 5,
+    opts.h || 8,
+    opts.data || defaultData)
+}
+
 describe('VelocitySystem', () => {
   beforeEach(function() {
     this.vs = new VelocitySystem()
@@ -83,7 +100,7 @@ describe('VelocitySystem', () => {
     it('collides with a wall in front of the entity', function() {
       //log.getLogger('VelocitySystem').setLevel('trace')
 
-      var map = new TestMap(5, 8,
+      var map = testMapFactory({data: 
         [ 0,0,0,1,0,
           0,0,0,1,0,
           0,0,0,1,0,
@@ -91,7 +108,7 @@ describe('VelocitySystem', () => {
           0,0,0,1,0,
           0,0,0,1,0,
           0,0,0,1,0,
-          0,0,0,1,0 ])
+          0,0,0,1,0 ]})
       expect(map.mapDataAt(3, 0).isEdge).to.be.ok // 'ok' means truthy here
       expect(map.mapDataAt(4, 0).isEdge).to.not.be.ok
 
@@ -109,7 +126,7 @@ describe('VelocitySystem', () => {
     })
 
     it("doesn't collide with the top of the map if moving right (#23)", function() {
-      var map = new TestMap(5, 8,
+      var map = testMapFactory({ data:
         [ 0,0,0,0,0,
           0,0,0,0,0,
           0,0,0,0,0,
@@ -117,7 +134,7 @@ describe('VelocitySystem', () => {
           0,0,0,0,0,
           0,0,0,0,0,
           0,0,0,0,0,
-          0,0,0,0,0 ])
+          0,0,0,0,0 ]})
 
       var e = testEntityFactory({
         // put the entity where it is touching the top of the map
@@ -134,7 +151,7 @@ describe('VelocitySystem', () => {
 
     it("falls to the ground if there is one pixel of space (#24)", function() {
       //log.getLogger('VelocitySystem').setLevel('trace')
-      var map = new TestMap(5, 8,
+      var map = testMapFactory({ data:
         [ 0,0,0,0,0,
           0,0,0,0,0,
           0,0,0,0,0,
@@ -142,7 +159,7 @@ describe('VelocitySystem', () => {
           0,0,0,0,0,
           1,1,1,1,1,
           0,0,0,0,0,
-          0,0,0,0,0 ])
+          0,0,0,0,0 ]})
 
       var e = testEntityFactory({
         // put the entity where it is just above the ground line

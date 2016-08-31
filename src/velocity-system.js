@@ -85,6 +85,7 @@ var VelocitySystem = function() {
       }
     }
 
+    // todo: this doesn't cope with falling faster than 1px per frame
     var x0 = pos.x, x1 = pos.x
     var y0 = pos.y, y1 = pos.y + 1
     //this.log.debug(`checking for an edge below us (position ${pos.x},${pos.y}) from ${x0},${y0} to ${x1},${y1}`)
@@ -95,7 +96,6 @@ var VelocitySystem = function() {
       //this.log.debug(`edgeBelow found at ${edgeBelow.x},${edgeBelow.y}`)
     }
     if (mp.y > 0) { // TODO: should this check for FALLING instead? are those equivalent?
-      // check for an edge up to two pixels below us
       if (edgeBelow) {
         this.log.debug(`collision with ground at ${edgeBelow.x},${edgeBelow.y}: setting position to ${edgeBelow.x},${edgeBelow.y-1}, vy to 0 and mpy to 0`)
         pos.x = edgeBelow.x

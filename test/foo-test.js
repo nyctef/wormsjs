@@ -19,6 +19,17 @@ function TestEntity() {
   this.shape = [ 1,1, 1,1 ]
 }
 
+function testEntityFactory(opts) {
+  var e = new TestEntity()
+  e.velocity.x = opts.vx || 0
+  e.velocity.y = opts.vy || 0
+  e.position.x = opts.posx || 0
+  e.position.y = opts.posy || 0
+  e.move_plan.x = opts.movx || 0
+  e.move_plan.y = opts.movy || 0
+  return e
+}
+
 function MapData() { }
 
 function TestMap(width, height, data) {
@@ -50,8 +61,7 @@ describe('VelocitySystem', () => {
   describe('#set_move_plan', () => {
     it('converts a velocity into a move plan in appropriate frames', function() {
 
-      var e = new TestEntity()
-      e.velocity.x = 1
+      var e = testEntityFactory({ vx: 1 })
 
       this.vs.set_move_plan(this.game, e)
 
@@ -60,8 +70,7 @@ describe('VelocitySystem', () => {
     })
     it('does not set the move plan in other frames', function() {
 
-      var e = new TestEntity()
-      e.velocity.x = 1
+      var e = testEntityFactory({ vx: 1 })
       this.vs.start_frame()
 
       this.vs.set_move_plan(this.game, e)
@@ -86,12 +95,12 @@ describe('VelocitySystem', () => {
       expect(map.mapDataAt(3, 0).isEdge).to.be.ok // 'ok' means truthy here
       expect(map.mapDataAt(4, 0).isEdge).to.not.be.ok
 
-      var e = new TestEntity()
-      // put the entity where it should just be touching the wall (since it is 2 pixels wide)
-      e.position.x = 1
-      e.position.y = 3
-      // and set it moving rightwards
-      e.move_plan.x = 1
+      var e = testEntityFactory({
+        // put the entity where it should just be touching the wall (since it is 2 pixels wide)
+        posx: 1, posy: 3,
+        // and set it moving rightwards
+        movx: 1
+      })
 
       this.vs.check_collisions(map, e)
 
@@ -110,12 +119,12 @@ describe('VelocitySystem', () => {
           0,0,0,0,0,
           0,0,0,0,0 ])
 
-      var e = new TestEntity()
-      // put the entity where it is touching the top of the map
-      e.position.x = 1
-      e.position.y = 0
-      // and set it moving rightwards
-      e.move_plan.x = 1
+      var e = testEntityFactory({
+        // put the entity where it is touching the top of the map
+        posx: 1, posy: 0,
+        // and set it moving rightwards
+        movx: 1
+      })
 
       this.vs.check_collisions(map, e)
 
@@ -135,10 +144,10 @@ describe('VelocitySystem', () => {
           0,0,0,0,0,
           0,0,0,0,0 ])
 
-      var e = new TestEntity()
-      // put the entity where it is touching the top of the map
-      e.position.x = 1
-      e.position.y = 2
+      var e = testEntityFactory({
+        // put the entity where it is just above the ground line
+        posx: 1, posy: 2
+      })
 
       this.vs.check_collisions(map, e)
 

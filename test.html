@@ -12,9 +12,29 @@ canvas {
     height:1200;
 }
         </style>
+        <script type='text/javascript'>
+
+window.loadJs = function(s)
+{
+    var script = document.createElement("script");
+    script.src = s + "?" + performance.now();
+    script.type = "text/javascript";
+    var head = document.getElementsByTagName("head")[0];
+    head.appendChild(script);
+    head.removeChild(script);
+}
+
+window.reload = function()
+{
+    console.log('reloading js')
+    loadJs('dist/bundle.js')
+}
+
+reload()
+
+        </script>
     </head>
     <body style='margin:0; padding:0; width:100%'> 
         <canvas id='screen' width=400 height=300></canvas>
-        <script src='dist/bundle.js' ></script>
     </body>
 </html>

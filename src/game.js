@@ -10,7 +10,8 @@ import Map from './map'
 
 import log from 'loglevel'
 
-window.game = (function() {
+function makeGame() {
+  //console.log('makeGame')
 
   var canvas = document.getElementById('screen')
   var screen = new Screen(canvas)
@@ -73,24 +74,34 @@ window.game = (function() {
 
     update()
     draw()
-    
-    window.requestAnimationFrame(game.loop)
+   
+    if (window.game === game) {
+      // if we haven't been reloaded, register for the next frame
+      window.requestAnimationFrame(game.loop)
+    }
     //window.setTimeout(game.loop, 0)
   }
 
-  canvas.addEventListener('click', function(clickEvent) {
-    log.debug(clickEvent)
-    var x = clickEvent.pageX - canvas.offsetLeft
-    var y = clickEvent.pageY - canvas.offsetTop
-    var mx = Math.round(x * canvas.width / canvas.offsetWidth)
-    var my = Math.round(y * canvas.height / canvas.offsetHeight)
-    log.debug(`registered click at ${x},${y} (${mx},${my})`)
-    game.map.explodeHole(mx, my, 10)
-  })
+//  canvas.addEventListener('click', function(clickEvent) {
+//    log.debug(clickEvent)
+//    var x = clickEvent.pageX - canvas.offsetLeft
+//    var y = clickEvent.pageY - canvas.offsetTop
+//    var mx = Math.round(x * canvas.width / canvas.offsetWidth)
+//    var my = Math.round(y * canvas.height / canvas.offsetHeight)
+//    log.debug(`registered click at ${x},${y} (${mx},${my})`)
+//    game.map.explodeHole(mx, my, 10)
+//  })
 
   // start the game running
   game.loop()
 
   log.info(game)
   return game
-})()
+}
+
+window.game = makeGame()
+
+if (!window.has_reload) {
+  window.has_reload = true
+  window.setInterval(window.reload, 250)
+}

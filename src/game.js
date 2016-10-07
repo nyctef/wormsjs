@@ -43,7 +43,6 @@ if (!window.game_state) {
 function makeGame() {
   //console.log('makeGame')
 
-  var screen = window.screen
 
   var game = {}
   game.log = log.getLogger('game')
@@ -55,6 +54,7 @@ function makeGame() {
   // define some starting geometry
   // TODO: move this onto Map functions? or maybe a separate LoadMap thing?
   var player = window.game_state.player
+  var screen = window.screen
   screen.drawRect(0,  15, 100, 1, 'black')
   screen.drawRect(20, 14, 2, 2, 'black')
   screen.drawRect(30, 13, 3, 3, 'black')
@@ -66,8 +66,8 @@ function makeGame() {
   game.options = {
     drawEdgePixelData: true,
   }
-  var game_state = window.game_state
 
+  var game_state = window.game_state
   var keyboardInputSystem = new KeyboardInputSystem()
   var velocitySystem = new VelocitySystem(game_state.vs_state)
   var playerControlSystem = new PlayerControlSystem()
@@ -89,6 +89,7 @@ function makeGame() {
     // copy map background into mapRender
     window.pixeldata.mapRender.data.set(window.pixeldata.map.getImageData().data)
 
+    // copy mapRender into the screen (TODO: do we still need this as a separate step?)
     screen.putImageData(window.pixeldata.mapRender)
 
     drawingSystem.drawDebugData(screen, game)

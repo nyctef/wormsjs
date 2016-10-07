@@ -8,11 +8,16 @@ function sign(x) {
   return 1
 }
 
-var VelocitySystem = function() {
+var VelocitySystem = function(state) {
   this.log = log.getLogger('VelocitySystem')
-  this.frame_counter = 0
+
+  if (!state.frame_counter) {
+    state.frame_counter = 0
+  }
+  this.state = state
+
   this.start_frame = function(game) {
-    this.frame_counter++
+    this.state.frame_counter++
   }
 
     // vel 1 => vel +1 when fc % 60 == 0
@@ -29,8 +34,8 @@ var VelocitySystem = function() {
     var dy = entity.velocity.y
     var sx = sign(dx)
     var sy = sign(dy)
-    if (this.frame_counter % (60 / dx) == 0) { entity.move_plan.x = sx } else { entity.move_plan.x = 0 }
-    if (this.frame_counter % (60 / dy) == 0) { entity.move_plan.y = sy } else { entity.move_plan.y = 0 }
+    if (this.state.frame_counter % (60 / dx) == 0) { entity.move_plan.x = sx } else { entity.move_plan.x = 0 }
+    if (this.state.frame_counter % (60 / dy) == 0) { entity.move_plan.y = sy } else { entity.move_plan.y = 0 }
   }
 
   var noop = () => {}

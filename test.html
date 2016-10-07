@@ -26,6 +26,7 @@ window.loadJs = function(s)
 
 window.reload = function()
 {
+    if (window.stop_reload) { return }
     console.log('reloading js')
     loadJs('dist/bundle.js')
 }
@@ -35,6 +36,5 @@ reload()
         </script>
     </head>
     <body style='margin:0; padding:0; width:100%'> 
-        <canvas id='screen' width=400 height=300></canvas>
     </body>
 </html>

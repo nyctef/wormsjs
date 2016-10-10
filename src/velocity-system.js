@@ -11,10 +11,10 @@ function sign(x) {
 var VelocitySystem = function(state) {
   this.log = log.getLogger('VelocitySystem')
 
+  this.state = state
   if (!state.frame_counter) {
     state.frame_counter = 0
   }
-  this.state = state
 
   this.start_frame = function(game) {
     this.state.frame_counter++

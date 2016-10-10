@@ -69,7 +69,8 @@ function testMapFactory(opts) {
 
 describe('VelocitySystem', () => {
   beforeEach(function() {
-    this.vs = new VelocitySystem()
+    this.vs_state = {}
+    this.vs = new VelocitySystem(this.vs_state)
     this.game = null
     this.entity = new TestEntity()
     log.getLogger('VelocitySystem').setLevel('warn')

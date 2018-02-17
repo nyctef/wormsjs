@@ -6,7 +6,7 @@
   "scripts": {
     "test": "./node_modules/.bin/mocha --compilers js:babel-core/register --slow 10",
     "watchtest": "./node_modules/.bin/mocha --compilers js:babel-core/register --slow 10 --watch",
-    "lint": "gulp lint",
+    "lint": "tslint -c ./tslint.json -p ./tsconfig.json \"src/**/*.{ts,tsx}\"",
     "build": "webpack --config webpack.config.js",
     "watchbuild": "webpack-dev-server --config webpack.config.js"
   },
@@ -28,6 +28,7 @@
     "sinon": "^1.17.4",
     "source-map-loader": "^0.2.3",
     "tslint": "^5.9.1",
+    "tslint-eslint-rules": "^5.0.0",
     "typescript": "^2.7.2",
     "webpack": "^3.11.0",
     "webpack-dev-server": "^2.11.1"

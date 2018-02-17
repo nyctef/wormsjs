@@ -7,8 +7,8 @@
     "test": "./node_modules/.bin/mocha --compilers js:babel-core/register --slow 10",
     "watchtest": "./node_modules/.bin/mocha --compilers js:babel-core/register --slow 10 --watch",
     "lint": "gulp lint",
-    "build": "gulp es6",
-    "watchbuild": "gulp watch"
+    "build": "webpack --config webpack.config.js",
+    "watchbuild": "webpack-dev-server --config webpack.config.js"
   },
   "repository": {
     "type": "git",

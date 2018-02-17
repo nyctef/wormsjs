@@ -11,11 +11,6 @@
         "named-imports-order": "lowercase-first"
       }
     ],
-    "quotemark": [
-      true,
-      "single",
-      "jsx-double"
-    ],
     "no-conditional-assignment": true,
     "no-debugger": true,
     "no-unused-variable": true,

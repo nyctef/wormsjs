@@ -10,7 +10,8 @@
       ],
       "jsx": "react",
       "strict": true,
-      "moduleResolution": "node"
+      "moduleResolution": "node",
+      "allowJs": true
     },
     "include": [
       "src/**/*"

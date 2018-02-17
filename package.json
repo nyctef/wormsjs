@@ -21,12 +21,16 @@
   },
   "homepage": "https://github.com/nyctef/wormsjs#readme",
   "devDependencies": {
+    "awesome-typescript-loader": "^3.4.1",
     "chai": "^3.5.0",
     "mocha": "^2.5.3",
     "prettier": "^1.10.2",
     "sinon": "^1.17.4",
+    "source-map-loader": "^0.2.3",
     "tslint": "^5.9.1",
-    "typescript": "^2.7.2"
+    "typescript": "^2.7.2",
+    "webpack": "^3.11.0",
+    "webpack-dev-server": "^2.11.1"
   },
   "dependencies": {
     "loglevel": "^1.4.1"

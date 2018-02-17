@@ -1,6 +1,6 @@
-import log from 'loglevel'
 import PlayerStateComponent from './playerstate-component'
 import { castLine } from './math'
+import * as log from "loglevel";
 
 function sign(x) {
   if (x < 0) return -1

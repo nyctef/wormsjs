@@ -88,10 +88,9 @@ export class VelocitySystem {
 
   /**
    * reads: position, move_plan
-   * writes: position, move_plan, player_state, velocity
+   * writes: move_plan, player_state, velocity
    *
    * TODO: can we simplify the above a bit?
-   * We shouldn't need to set position if we set move_plan correctly
    * player_state/velocity might want to be set separately by a collision event
    * (since we want to collide more things than players)
    */

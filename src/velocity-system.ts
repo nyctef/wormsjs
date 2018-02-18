@@ -168,8 +168,6 @@ export class VelocitySystem {
           }: setting position to ${edgeBelow.x},${edgeBelow.y -
             1}, vy to 0 and mpy to 0`
         );
-        pos.x = edgeBelow.x;
-        pos.y = edgeBelow.y - 1;
         v.dy = v.dx = 0;
         mp.y = 0;
         ps.state = "STANDING";

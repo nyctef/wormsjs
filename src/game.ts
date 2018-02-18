@@ -15,7 +15,6 @@ interface Game {
   map: any;
   mapRender: any;
   options: any;
-  loop: any;
 }
 
 declare global {
@@ -81,15 +80,14 @@ window.game = (function() {
   }
 
   // define main game loop
-  game.loop = function() {
+  function loop() {
     /*var tdelta = */ countFrame();
 
     update();
     draw();
 
-    window.requestAnimationFrame(game.loop);
-    //window.setTimeout(game.loop, 0)
-  };
+    window.requestAnimationFrame(loop);
+  }
 
   canvas.addEventListener("click", clickEvent => {
     log.debug(clickEvent);
@@ -102,7 +100,7 @@ window.game = (function() {
   });
 
   // start the game running
-  game.loop();
+  loop();
 
   log.info(game);
   return game;

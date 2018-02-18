@@ -38,8 +38,6 @@ function testEntityFactory(opts: {
   return e;
 }
 
-function MapData() {}
-
 function TestMap(width: number, height: number, data: number[]) {
   return {
     _w: width,

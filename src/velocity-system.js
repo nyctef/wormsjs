@@ -27,8 +27,8 @@ var VelocitySystem = function() {
     if (!entity.move_plan || !entity.velocity) {
       return;
     }
-    var dx = entity.velocity.x;
-    var dy = entity.velocity.y;
+    var dx = entity.velocity.dx;
+    var dy = entity.velocity.dy;
     var sx = sign(dx);
     var sy = sign(dy);
     if (this.frame_counter % (60 / dx) == 0) {
@@ -104,7 +104,7 @@ var VelocitySystem = function() {
         } else {
           this.log.debug("collision with wall");
           // a collision happened
-          v.x = 0;
+          v.dx = 0;
           mp.x = 0;
         }
       }
@@ -137,7 +137,7 @@ var VelocitySystem = function() {
         );
         pos.x = edgeBelow.x;
         pos.y = edgeBelow.y - 1;
-        v.y = 0;
+        v.dy = 0;
         mp.y = 0;
         ps.state = "STANDING";
       }
@@ -146,7 +146,7 @@ var VelocitySystem = function() {
     if (!edgeBelow) {
       this.log.debug("starting to fall");
       ps.state = "FALLING";
-      v.y = 60;
+      v.dy = 60;
     }
   };
 

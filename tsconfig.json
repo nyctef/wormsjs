@@ -10,6 +10,6 @@
     "moduleResolution": "node",
     "allowJs": true
   },
-  "include": ["src/**/*"],
+  "include": ["test/**/*", "src/**/*"],
   "exclude": ["node_modules"]
 }

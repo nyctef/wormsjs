@@ -2,52 +2,61 @@ import { expect } from "chai";
 import * as log from "loglevel";
 import * as sinon from "sinon";
 
-import MovePlanComponent from "../src/moveplan-component";
-import PlayerStateComponent from "../src/playerstate-component";
-import PositionComponent from "../src/position-component";
-import VelocityComponent from "../src/velocity-component";
+import { Entity } from "../src/entity";
+import { MovePlanComponent } from "../src/moveplan-component";
+import { PlayerStateComponent } from "../src/playerstate-component";
+import { PositionComponent } from "../src/position-component";
+import { VelocityComponent } from "../src/velocity-component";
 import VelocitySystem from "../src/velocity-system";
 
-function TestEntity() {
-  this.velocity = new VelocityComponent();
-  this.move_plan = new MovePlanComponent();
-  this.player_state = new PlayerStateComponent();
-  this.position = new PositionComponent();
-  this.size = { width: 2, height: 2 };
-  this.shape = [1, 1, 1, 1];
+function TestEntity(): Entity {
+  return {
+    velocity: { dx: 0, dy: 0 },
+    move_plan: { x: 0, y: 0 },
+    player_state: { state: "FALLING" },
+    position: { x: 0, y: 0 },
+    size: { width: 2, height: 2 },
+    shape: [1, 1, 1, 1]
+  };
 }
 
-function testEntityFactory(opts) {
-  const e = new TestEntity();
-  e.velocity.x = opts.vx || 0;
-  e.velocity.y = opts.vy || 0;
-  e.position.x = opts.posx || 0;
-  e.position.y = opts.posy || 0;
-  e.move_plan.x = opts.movx || 0;
-  e.move_plan.y = opts.movy || 0;
+function testEntityFactory(opts: {
+  vx?: number;
+  vy?: number;
+  posx?: number;
+  posy?: number;
+  movx?: number;
+  movy?: number;
+}) {
+  const e = TestEntity();
+  e.velocity!.dx = opts.vx || 0;
+  e.velocity!.dy = opts.vy || 0;
+  e.position!.x = opts.posx || 0;
+  e.position!.y = opts.posy || 0;
+  e.move_plan!.x = opts.movx || 0;
+  e.move_plan!.y = opts.movy || 0;
   return e;
 }
 
 function MapData() {}
 
-function TestMap(width, height, data) {
-  this._w = width;
-  this._h = height;
-  this._data = data;
-  // TODO: this is a copy/paste of the real mapDataAt function,
-  // which indicates that Map should probably get split up a bit more
-  this.mapDataAt = function(x, y) {
-    const result = new MapData();
-    if (x < 0 || x >= this._w || y < 0 || y >= this._h) {
-      result.isEdge = true;
-      return result;
+function TestMap(width: number, height: number, data: number[]) {
+  return {
+    _w: width,
+    _h: height,
+    _data: data,
+    // TODO: this is a copy/paste of the real mapDataAt function,
+    // which indicates that Map should probably get split up a bit more
+    mapDataAt: function(x: number, y: number) {
+      if (x < 0 || x >= this._w || y < 0 || y >= this._h) {
+        return { isEdge: true };
+      }
+      return { isEdge: this._data[y * this._w + x] };
     }
-    result.isEdge = this._data[y * this._w + x];
-    return result;
   };
 }
 
-function testMapFactory(opts) {
+function testMapFactory(opts: { w?: number; h?: number; data?: number[] }) {
   // prettier-ignore
   const defaultData = [
     0, 0, 0, 0, 0,
@@ -59,14 +68,14 @@ function testMapFactory(opts) {
     0, 0, 0, 0, 0,
     0, 0, 0, 0, 0
   ];
-  return new TestMap(opts.w || 5, opts.h || 8, opts.data || defaultData);
+  return TestMap(opts.w || 5, opts.h || 8, opts.data || defaultData);
 }
 
 describe("VelocitySystem", () => {
   beforeEach(function() {
     this.vs = new VelocitySystem();
     this.game = null;
-    this.entity = new TestEntity();
+    this.entity = TestEntity();
     log.getLogger("VelocitySystem").setLevel("warn");
   });
 
@@ -77,7 +86,7 @@ describe("VelocitySystem", () => {
       this.vs.set_move_plan(this.game, e);
 
       // with a velocity of 1, we want to move 1 on 1/60 frames
-      expect(e.move_plan.x).to.equal(1);
+      expect(e.move_plan!.x).to.equal(1);
     });
     it("does not set the move plan in other frames", function() {
       const e = testEntityFactory({ vx: 1 });
@@ -86,7 +95,7 @@ describe("VelocitySystem", () => {
       this.vs.set_move_plan(this.game, e);
 
       // with a velocity of 1, we only want to actually move every 60 frames
-      expect(e.move_plan.x).to.equal(0);
+      expect(e.move_plan!.x).to.equal(0);
     });
   });
   describe("#check_collisions", () => {
@@ -120,7 +129,7 @@ describe("VelocitySystem", () => {
       this.vs.check_collisions(map, e);
 
       // we've hit a wall, so we alter the move-plan to be stopped
-      expect(e.move_plan.x).to.equal(0);
+      expect(e.move_plan!.x).to.equal(0);
     });
 
     it("doesn't collide with the top of the map if moving right (#23)", function() {
@@ -149,7 +158,7 @@ describe("VelocitySystem", () => {
       this.vs.check_collisions(map, e);
 
       // there isn't a wall to the right, so we should continue rightwards
-      expect(e.move_plan.x).to.equal(1);
+      expect(e.move_plan!.x).to.equal(1);
     });
 
     it("falls to the ground if there is one pixel of space (#24)", function() {
@@ -177,7 +186,7 @@ describe("VelocitySystem", () => {
       this.vs.check_collisions(map, e);
 
       // there is a gap below, so we should start falling
-      expect(e.velocity.y).to.be.above(0);
+      expect(e.velocity!.dy).to.be.above(0);
     });
   });
 });

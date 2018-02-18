@@ -15,31 +15,31 @@ function sign(x: number) {
 
 export class VelocitySystem {
   frame_counter: number;
-  start_frame: () => void;
   log: log.Logger;
 
   constructor() {
     this.log = log.getLogger("VelocitySystem");
     this.frame_counter = 0;
-    this.start_frame = function() {
-      this.frame_counter++;
-    };
   }
 
-  // vel 1 => vel +1 when fc % 60 == 0
-  // vel 2 => vel +1 when fc % 30 == 0
-  // vel 3 => vel +1 when fc % 20 == 0
-  // vel 60 => vel +1 when fc % 1 == 0
-  // TODO:
-  // vel 120 => vel +2 when fc % 1 == 0
-  // vel 90 => vel +1 when fc % 2 == 0 and vel +2 when fc % 2 == 1
-  // will other systems start breaking if we move more than one pixel/frame?
+  start_frame = () => {
+    this.frame_counter++;
+  };
 
   /**
    * reads: velocity
    * writes: move_plan
    */
   set_move_plan = (entity: Entity) => {
+    // vel 1 => vel +1 when fc % 60 == 0
+    // vel 2 => vel +1 when fc % 30 == 0
+    // vel 3 => vel +1 when fc % 20 == 0
+    // vel 60 => vel +1 when fc % 1 == 0
+    // TODO:
+    // vel 120 => vel +2 when fc % 1 == 0
+    // vel 90 => vel +1 when fc % 2 == 0 and vel +2 when fc % 2 == 1
+    // will other systems start breaking if we move more than one pixel/frame?
+
     if (!entity.move_plan || !entity.velocity) {
       return;
     }

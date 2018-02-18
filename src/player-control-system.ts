@@ -44,6 +44,6 @@ export const PlayerControlSystem = {
       player_state.state = "STANDING";
       return;
     }
-    velocity.dx = sx * 10;
+    velocity.dx = sx * 20;
   }
 };

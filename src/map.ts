@@ -7,7 +7,7 @@ const G = 1;
 const B = 2;
 const A = 3;
 
-function getEdgePixelData(mapInput: any, mapData: PixelData[]) {
+function getEdgePixelData(mapInput: ImageData, mapData: PixelData[]) {
   const gameWidth = mapInput.width;
   const gameHeight = mapInput.height;
   const imageData = mapInput.data;
@@ -34,12 +34,12 @@ function getEdgePixelData(mapInput: any, mapData: PixelData[]) {
 
 export class Map {
   _mapData: PixelData[];
-  _imageData: any;
+  _imageData: ImageData;
   _w: number;
   _h: number;
   log: log.Logger;
 
-  constructor(initialImageData: any) {
+  constructor(initialImageData: ImageData) {
     this._imageData = initialImageData;
     this._w = initialImageData.width;
     this._h = initialImageData.height;

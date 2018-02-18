@@ -1,5 +1,7 @@
 import * as d from "./drawing";
 import countFrame from "./fps";
+import { Game } from "./game-types";
+import { Keyboard } from "./keyboard";
 import { updateKeyboard } from "./keyboard-input-system";
 import { Map } from "./map";
 import Player from "./player";
@@ -8,15 +10,6 @@ import Screen from "./screen";
 import { VelocitySystem } from "./velocity-system";
 
 import * as log from "loglevel";
-import { Keyboard } from "./keyboard";
-
-interface Game {
-  log: log.Logger;
-  size: { x: number; y: number };
-  map: any;
-  mapRender: any;
-  options: any;
-}
 
 declare global {
   interface Window {
@@ -60,13 +53,13 @@ window.game = (function() {
   const keyboard = new Keyboard(window);
 
   function update() {
-    velocitySystem.start_frame!(game);
+    velocitySystem.start_frame();
 
     updateKeyboard(keyboard, player);
-    playerControlSystem.update!(player);
-    velocitySystem.set_move_plan!(player);
-    velocitySystem.check_collisions!(game.map, player);
-    velocitySystem.apply_move_plan!(player);
+    playerControlSystem.update(player);
+    velocitySystem.set_move_plan(player);
+    velocitySystem.check_collisions(game.map, player);
+    velocitySystem.apply_move_plan(player);
   }
 
   function draw() {

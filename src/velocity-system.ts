@@ -1,5 +1,6 @@
 import * as log from "loglevel";
 import { Entity } from "./entity";
+import { Map } from "./map";
 import { castLine } from "./math";
 import { PlayerStateComponent } from "./playerstate-component";
 
@@ -15,12 +16,13 @@ function sign(x: number) {
 
 export class VelocitySystem {
   frame_counter: number;
-  start_frame: (game: any) => void;
+  start_frame: () => void;
   log: log.Logger;
+
   constructor() {
     this.log = log.getLogger("VelocitySystem");
     this.frame_counter = 0;
-    this.start_frame = function(game) {
+    this.start_frame = function() {
       this.frame_counter++;
     };
   }
@@ -55,7 +57,7 @@ export class VelocitySystem {
 
   noop = (str: string) => {};
 
-  getCollisionPredicate = (map: any, entity: Entity, doLog = this.noop) => {
+  getCollisionPredicate = (map: Map, entity: Entity, doLog = this.noop) => {
     return (x0: number, y0: number) => {
       const size = entity.size;
       const shape = entity.shape;
@@ -80,7 +82,7 @@ export class VelocitySystem {
     };
   };
 
-  check_collisions = (map: any, entity: Entity) => {
+  check_collisions = (map: Map, entity: Entity) => {
     const pos = entity.position;
     const mp = entity.move_plan;
     const ps = entity.player_state;

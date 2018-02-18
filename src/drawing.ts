@@ -1,5 +1,7 @@
 import { Entity } from "./entity";
+import { GameOptions } from "./game-types";
 import { PixelData } from "./map";
+import { Map } from "./map";
 import Screen from "./screen";
 
 interface MapThingy {
@@ -87,7 +89,7 @@ const DrawingSystem = {
     }
   },
 
-  drawDebugData: function(screen: Screen, options: any, map: any) {
+  drawDebugData: function(screen: Screen, options: GameOptions, map: Map) {
     if (options.drawEdgePixelData) {
       this.drawIsEdge(screen, map.getMapData());
     }

@@ -139,13 +139,13 @@ var VelocitySystem = function() {
         pos.y = edgeBelow.y - 1;
         v.y = 0;
         mp.y = 0;
-        ps.state = PlayerStateComponent.STANDING;
+        ps.state = "STANDING";
       }
     }
 
     if (!edgeBelow) {
       this.log.debug("starting to fall");
-      ps.state = PlayerStateComponent.FALLING;
+      ps.state = "FALLING";
       v.y = 60;
     }
   };

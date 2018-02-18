@@ -3,16 +3,16 @@ import PlayerStateComponent from "./playerstate-component";
 var PlayerControlSystem = function() {
   // TODO: this should probably be the only entity actually on a player (KeyboardInputSystem doesn't need to be duplicated everywhere)
   this.update = function(game, entity) {
-    if (entity.player_state.state == PlayerStateComponent.STANDING) {
+    if (entity.player_state.state == "STANDING") {
       this.standing(entity);
-    } else if (entity.player_state.state == PlayerStateComponent.WALKING) {
+    } else if (entity.player_state.state == "WALKING") {
       this.walking(entity);
     }
   };
 
   this.standing = function(entity) {
     if (entity.keyboard_input.left || entity.keyboard_input.right) {
-      entity.player_state.state = PlayerStateComponent.WALKING;
+      entity.player_state.state = "WALKING";
       return;
     }
   };
@@ -26,7 +26,7 @@ var PlayerControlSystem = function() {
       sx = +1;
     } else {
       entity.velocity.x = 0;
-      entity.player_state.state = PlayerStateComponent.STANDING;
+      entity.player_state.state = "STANDING";
       return;
     }
     entity.velocity.x = sx * 10;

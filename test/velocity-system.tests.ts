@@ -181,5 +181,37 @@ describe("VelocitySystem", () => {
       // there is a gap below, so we should start falling
       expect(e.velocity!.dy).to.be.above(0);
     });
+
+    it("stops horizontal movement when hitting the ground", function() {
+      //log.getLogger('VelocitySystem').setLevel('trace')
+      const map = testMapFactory({
+        // prettier-ignore
+        data: [
+          0, 0, 0, 0, 0,
+          0, 0, 0, 0, 0,
+          0, 0, 0, 0, 0,
+          0, 0, 0, 0, 0,
+          0, 0, 0, 0, 0,
+          1, 1, 1, 1, 1,
+          0, 0, 0, 0, 0,
+          0, 0, 0, 0, 0
+        ]
+      });
+
+      const e = testEntityFactory({
+        // put the entity where it will hit the ground
+        posx: 1,
+        posy: 3,
+        vx: 3,
+        vy: 10,
+        movx: 3,
+        movy: 10
+      });
+
+      this.vs.check_collisions(map, e);
+
+      expect(e.velocity!.dy).to.equal(0);
+      expect(e.velocity!.dx).to.equal(0);
+    });
   });
 });

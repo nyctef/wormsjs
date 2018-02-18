@@ -34,6 +34,11 @@ export class VelocitySystem {
   // vel 120 => vel +2 when fc % 1 == 0
   // vel 90 => vel +1 when fc % 2 == 0 and vel +2 when fc % 2 == 1
   // will other systems start breaking if we move more than one pixel/frame?
+
+  /**
+   * reads: velocity
+   * writes: move_plan
+   */
   set_move_plan = (entity: Entity) => {
     if (!entity.move_plan || !entity.velocity) {
       return;
@@ -81,6 +86,15 @@ export class VelocitySystem {
     };
   };
 
+  /**
+   * reads: position, move_plan
+   * writes: position, move_plan, player_state, velocity
+   *
+   * TODO: can we simplify the above a bit?
+   * We shouldn't need to set position if we set move_plan correctly
+   * player_state/velocity might want to be set separately by a collision event
+   * (since we want to collide more things than players)
+   */
   check_collisions = (map: Map, entity: Entity) => {
     const pos = entity.position;
     const mp = entity.move_plan;
@@ -156,7 +170,7 @@ export class VelocitySystem {
         );
         pos.x = edgeBelow.x;
         pos.y = edgeBelow.y - 1;
-        v.dy = 0;
+        v.dy = v.dx = 0;
         mp.y = 0;
         ps.state = "STANDING";
       }
@@ -169,6 +183,10 @@ export class VelocitySystem {
     }
   };
 
+  /**
+   * reads: move_plan
+   * writes: position
+   */
   apply_move_plan = (entity: Entity) => {
     if (!entity.position || !entity.move_plan) {
       return;

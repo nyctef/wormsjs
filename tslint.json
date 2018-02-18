@@ -1,7 +1,5 @@
 {
-  "extends": [
-    "tslint-eslint-rules"
-  ],
+  "extends": ["tslint-eslint-rules"],
   "rules": {
     "curly": true,
     "ordered-imports": [
@@ -22,9 +20,6 @@
         "allowNamedFunctions": true
       }
     ],
-    "triple-equals": [
-      true,
-      "allow-null-check"
-    ]
+    "triple-equals": [true, "allow-null-check"]
   }
 }

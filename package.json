@@ -7,6 +7,7 @@
     "test": "mocha -r ts-node/register test/**/*.* --slow 10",
     "watchtest": "mocha -r ts-node/register test/**/*.* --slow 10 --watch",
     "lint": "tslint -c ./tslint.json -p ./tsconfig.json \"src/**/*.{ts,tsx}\"",
+    "prettier": "prettier --write {src,test}/**/*.{js,ts,tsx,css,sass,scss}",
     "build": "webpack --config webpack.config.js",
     "watchbuild": "webpack-dev-server --config webpack.config.js"
   },

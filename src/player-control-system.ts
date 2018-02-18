@@ -1,7 +1,9 @@
+import {
+  KeyboardInputComponent,
+  PlayerStateComponent,
+  VelocityComponent
+} from "./component-types";
 import { Entity } from "./entity";
-import { KeyboardInputComponent } from "./keyboard-input-component";
-import { PlayerStateComponent } from "./playerstate-component";
-import { VelocityComponent } from "./velocity-component";
 
 const PlayerControlSystem = {
   update: function(entity: Entity) {

@@ -2,7 +2,6 @@ import * as log from "loglevel";
 import { Entity } from "./entity";
 import { Map } from "./map";
 import { castLine } from "./math";
-import { PlayerStateComponent } from "./playerstate-component";
 
 function sign(x: number) {
   if (x < 0) {

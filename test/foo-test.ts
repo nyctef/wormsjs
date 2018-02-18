@@ -3,10 +3,6 @@ import * as log from "loglevel";
 import * as sinon from "sinon";
 
 import { Entity } from "../src/entity";
-import { MovePlanComponent } from "../src/moveplan-component";
-import { PlayerStateComponent } from "../src/playerstate-component";
-import { PositionComponent } from "../src/position-component";
-import { VelocityComponent } from "../src/velocity-component";
 import { VelocitySystem } from "../src/velocity-system";
 
 function TestEntity(): Entity {

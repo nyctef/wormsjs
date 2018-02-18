@@ -1,9 +1,13 @@
-import { AppearanceComponent } from "./appearance-component";
-import { KeyboardInputComponent } from "./keyboard-input-component";
-import { MovePlanComponent } from "./moveplan-component";
-import { PlayerStateComponent } from "./playerstate-component";
-import { PositionComponent } from "./position-component";
-import { VelocityComponent } from "./velocity-component";
+import {
+  AppearanceComponent,
+  KeyboardInputComponent,
+  MovePlanComponent,
+  PlayerStateComponent,
+  PositionComponent,
+  ShapeComponent,
+  SizeComponent,
+  VelocityComponent
+} from "./component-types";
 
 export interface Entity {
   ["keyboard_input"]?: KeyboardInputComponent;
@@ -11,7 +15,7 @@ export interface Entity {
   ["velocity"]?: VelocityComponent;
   ["move_plan"]?: MovePlanComponent;
   ["player_state"]?: PlayerStateComponent;
-  ["size"]?: { width: number; height: number };
-  ["shape"]?: number[];
+  ["size"]?: SizeComponent;
+  ["shape"]?: ShapeComponent;
   ["appearance"]?: AppearanceComponent;
 }

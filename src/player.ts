@@ -1,14 +1,6 @@
-import { AppearanceComponent } from "./appearance-component";
+import { newKeyboardInputComponent } from "./component-types";
 import * as d from "./drawing";
 import { Entity } from "./entity";
-import {
-  newKeyboardInputComponent,
-  KeyboardInputComponent
-} from "./keyboard-input-component";
-import { MovePlanComponent } from "./moveplan-component";
-import { PlayerStateComponent } from "./playerstate-component";
-import { PositionComponent } from "./position-component";
-import { VelocityComponent } from "./velocity-component";
 
 function Player(posx: number, posy: number): Entity {
   // prettier-ignore

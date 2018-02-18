@@ -36,6 +36,8 @@ export class VelocitySystem {
     // vel 3 => vel +1 when fc % 20 == 0
     // vel 60 => vel +1 when fc % 1 == 0
     // TODO:
+    // vel 45 => ?
+    // vel 46 => ?
     // vel 120 => vel +2 when fc % 1 == 0
     // vel 90 => vel +1 when fc % 2 == 0 and vel +2 when fc % 2 == 1
     // will other systems start breaking if we move more than one pixel/frame?
@@ -47,12 +49,12 @@ export class VelocitySystem {
     const dy = entity.velocity.dy;
     const sx = sign(dx);
     const sy = sign(dy);
-    if (this.frame_counter % (60 / dx) === 0) {
+    if ((this.frame_counter % (60 / dx) | 0) === 0) {
       entity.move_plan.x = sx;
     } else {
       entity.move_plan.x = 0;
     }
-    if (this.frame_counter % (60 / dy) === 0) {
+    if ((this.frame_counter % (60 / dy) | 0) === 0) {
       entity.move_plan.y = sy;
     } else {
       entity.move_plan.y = 0;
@@ -176,7 +178,11 @@ export class VelocitySystem {
     if (!edgeBelow) {
       log.debug("starting to fall");
       ps.state = "FALLING";
-      v.dy = 60;
+      if (this.frame_counter % 2 == 0) { v.dy = (v.dy + 1); }
+      if (v.dy > 60) {
+        v.dy = 60;
+      }
+      log.debug("set dy to " + v.dy);
     }
   };
 

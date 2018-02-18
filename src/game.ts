@@ -1,13 +1,14 @@
 import * as d from "./drawing";
 import countFrame from "./fps";
-import KeyboardInputSystem from "./keyboard-input-system";
-import Map from "./map";
+import { updateKeyboard } from "./keyboard-input-system";
+import { Map } from "./map";
 import Player from "./player";
 import PlayerControlSystem from "./player-control-system";
 import Screen from "./screen";
-import VelocitySystem from "./velocity-system";
+import { VelocitySystem } from "./velocity-system";
 
 import * as log from "loglevel";
+import { Keyboard } from "./keyboard";
 
 interface Game {
   log: log.Logger;
@@ -53,19 +54,19 @@ window.game = (function() {
     drawEdgePixelData: true
   };
 
-  const keyboardInputSystem = new KeyboardInputSystem();
   const velocitySystem = new VelocitySystem();
-  const playerControlSystem = new PlayerControlSystem();
-  const drawingSystem = new d.DrawingSystem();
+  const playerControlSystem = PlayerControlSystem;
+  const drawingSystem = d.DrawingSystem;
+  const keyboard = new Keyboard(window);
 
   function update() {
     velocitySystem.start_frame!(game);
 
-    keyboardInputSystem.update!(game, player);
-    playerControlSystem.update!(game, player);
-    velocitySystem.set_move_plan!(game, player);
+    updateKeyboard(keyboard, player);
+    playerControlSystem.update!(player);
+    velocitySystem.set_move_plan!(player);
     velocitySystem.check_collisions!(game.map, player);
-    velocitySystem.apply_move_plan!(game, player);
+    velocitySystem.apply_move_plan!(player);
   }
 
   function draw() {
@@ -74,9 +75,9 @@ window.game = (function() {
 
     screen.putImageData(game.mapRender);
 
-    drawingSystem.drawDebugData!(screen, game);
+    drawingSystem.drawDebugData(screen, game.options, game.map);
 
-    drawingSystem.draw!(screen, player);
+    drawingSystem.draw(screen, player);
   }
 
   // define main game loop

@@ -7,7 +7,7 @@ import { MovePlanComponent } from "../src/moveplan-component";
 import { PlayerStateComponent } from "../src/playerstate-component";
 import { PositionComponent } from "../src/position-component";
 import { VelocityComponent } from "../src/velocity-component";
-import VelocitySystem from "../src/velocity-system";
+import { VelocitySystem } from "../src/velocity-system";
 
 function TestEntity(): Entity {
   return {
@@ -74,7 +74,6 @@ function testMapFactory(opts: { w?: number; h?: number; data?: number[] }) {
 describe("VelocitySystem", () => {
   beforeEach(function() {
     this.vs = new VelocitySystem();
-    this.game = null;
     this.entity = TestEntity();
     log.getLogger("VelocitySystem").setLevel("warn");
   });
@@ -83,7 +82,7 @@ describe("VelocitySystem", () => {
     it("converts a velocity into a move plan in appropriate frames", function() {
       const e = testEntityFactory({ vx: 1 });
 
-      this.vs.set_move_plan(this.game, e);
+      this.vs.set_move_plan(e);
 
       // with a velocity of 1, we want to move 1 on 1/60 frames
       expect(e.move_plan!.x).to.equal(1);
@@ -92,7 +91,7 @@ describe("VelocitySystem", () => {
       const e = testEntityFactory({ vx: 1 });
       this.vs.start_frame();
 
-      this.vs.set_move_plan(this.game, e);
+      this.vs.set_move_plan(e);
 
       // with a velocity of 1, we only want to actually move every 60 frames
       expect(e.move_plan!.x).to.equal(0);

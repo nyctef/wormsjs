@@ -37,6 +37,7 @@ window.game = (function() {
   // TODO: move this onto Map functions? or maybe a separate LoadMap thing?
   const player = Player(0, 0);
   screen.drawRect(0, 15, 100, 1, "black");
+  screen.drawRect(0, 30, 100, 1, "black");
   screen.drawRect(20, 14, 2, 2, "black");
   screen.drawRect(30, 13, 3, 3, "black");
   screen.drawRect(40, 12, 4, 4, "black");

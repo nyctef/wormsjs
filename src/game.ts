@@ -17,6 +17,8 @@ declare global {
   }
 }
 
+const keyboard = new Keyboard(window);
+
 window.game = (function() {
   const canvas = document.getElementById("screen") as HTMLCanvasElement;
   const screen = new Screen(canvas);
@@ -50,7 +52,6 @@ window.game = (function() {
   const velocitySystem = new VelocitySystem();
   const playerControlSystem = PlayerControlSystem;
   const drawingSystem = d.DrawingSystem;
-  const keyboard = new Keyboard(window);
 
   function update() {
     velocitySystem.start_frame();

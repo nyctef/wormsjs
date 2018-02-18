@@ -1,3 +1,4 @@
+import { DrawingSystem } from "./drawing-system";
 import { countFrame } from "./fps";
 import { Game } from "./game-types";
 import { Keyboard } from "./keyboard";
@@ -9,7 +10,6 @@ import { Screen } from "./screen";
 import { VelocitySystem } from "./velocity-system";
 
 import * as log from "loglevel";
-import { DrawingSystem } from "./drawing";
 
 declare global {
   interface Window {

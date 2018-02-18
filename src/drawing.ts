@@ -2,7 +2,7 @@ import { Entity } from "./entity";
 import { GameOptions } from "./game-types";
 import { PixelData } from "./map";
 import { Map } from "./map";
-import Screen from "./screen";
+import { Screen } from "./screen";
 
 interface MapThingy {
   data: number[];

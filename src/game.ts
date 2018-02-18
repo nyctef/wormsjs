@@ -1,15 +1,15 @@
-import * as d from "./drawing";
-import countFrame from "./fps";
+import { countFrame } from "./fps";
 import { Game } from "./game-types";
 import { Keyboard } from "./keyboard";
 import { updateKeyboard } from "./keyboard-input-system";
 import { Map } from "./map";
-import Player from "./player";
-import PlayerControlSystem from "./player-control-system";
-import Screen from "./screen";
+import { Player } from "./player";
+import { PlayerControlSystem } from "./player-control-system";
+import { Screen } from "./screen";
 import { VelocitySystem } from "./velocity-system";
 
 import * as log from "loglevel";
+import { DrawingSystem } from "./drawing";
 
 declare global {
   interface Window {
@@ -51,7 +51,7 @@ window.game = (function() {
 
   const velocitySystem = new VelocitySystem();
   const playerControlSystem = PlayerControlSystem;
-  const drawingSystem = d.DrawingSystem;
+  const drawingSystem = DrawingSystem;
 
   function update() {
     velocitySystem.start_frame();

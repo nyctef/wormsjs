@@ -1,8 +1,7 @@
 import { newKeyboardInputComponent } from "./component-types";
-import * as d from "./drawing";
 import { Entity } from "./entity";
 
-function Player(posx: number, posy: number): Entity {
+export function Player(posx: number, posy: number): Entity {
   // prettier-ignore
   const shape = [
     0, 0, 1, 0, 0,
@@ -34,5 +33,3 @@ function Player(posx: number, posy: number): Entity {
     }
   };
 }
-
-export default Player;

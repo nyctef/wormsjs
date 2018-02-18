@@ -1,4 +1,4 @@
-class Screen {
+export class Screen {
   _ctx: CanvasRenderingContext2D;
   _width: number;
   _height: number;
@@ -61,5 +61,3 @@ class Screen {
     this._ctx.putImageData(data, 0, 0);
   };
 }
-
-export default Screen;

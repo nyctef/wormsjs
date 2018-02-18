@@ -5,7 +5,7 @@ import {
 } from "./component-types";
 import { Entity } from "./entity";
 
-const PlayerControlSystem = {
+export const PlayerControlSystem = {
   update: function(entity: Entity) {
     const { player_state, keyboard_input, velocity } = entity;
     if (!player_state || !keyboard_input || !velocity) {
@@ -47,5 +47,3 @@ const PlayerControlSystem = {
     velocity.dx = sx * 10;
   }
 };
-
-export default PlayerControlSystem;

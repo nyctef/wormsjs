@@ -2,7 +2,7 @@ import * as log from "loglevel";
 const fpsLog = log.getLogger("fps");
 
 // set up an fps counter
-const countFrame = (function() {
+export const countFrame = (function() {
   let lastFrameStartTime = performance.now();
   let frameCountStartTime = performance.now();
   let frameCount = 0;
@@ -29,5 +29,3 @@ const countFrame = (function() {
 
   return countFrame;
 })();
-
-export default countFrame;

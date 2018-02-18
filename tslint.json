@@ -11,7 +11,7 @@
     ],
     "no-conditional-assignment": true,
     "no-debugger": true,
-    "no-unused-variable": true,
+    "no-unused-variable": { "severity": "warning" },
     "no-var-keyword": true,
     "prefer-const": true,
     "ter-prefer-arrow-callback": [

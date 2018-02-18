@@ -8,6 +8,5 @@ export interface Game {
   log: log.Logger;
   size: { x: number; y: number };
   map: Map;
-  mapRender: ImageData;
   options: GameOptions;
 }

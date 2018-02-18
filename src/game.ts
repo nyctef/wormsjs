@@ -20,31 +20,31 @@ declare global {
 const keyboard = new Keyboard(window);
 
 window.game = (function() {
-  const canvas = document.getElementById("screen") as HTMLCanvasElement;
-  const screen = new Screen(canvas);
+  const mapCanvas = document.getElementById("canvas-map") as HTMLCanvasElement;
+  const mapScreen = new Screen(mapCanvas);
+  const spritesCanvas = document.getElementById(
+    "canvas-sprites"
+  ) as HTMLCanvasElement;
+  const spritesScreen = new Screen(spritesCanvas);
 
   const game = {} as Game;
-  if (!screen) {
-    throw "x";
-  }
   game.log = log.getLogger("game");
 
-  game.size = { x: canvas.width, y: canvas.height };
+  game.size = { x: mapCanvas.width, y: mapCanvas.height };
 
   log.debug(`game size: ${game.size.x},${game.size.y}`);
 
   // define some starting geometry
   // TODO: move this onto Map functions? or maybe a separate LoadMap thing?
   const player = Player(0, 0);
-  screen.drawRect(0, 15, 100, 1, "black");
-  screen.drawRect(0, 30, 100, 1, "black");
-  screen.drawRect(20, 14, 2, 2, "black");
-  screen.drawRect(30, 13, 3, 3, "black");
-  screen.drawRect(40, 12, 4, 4, "black");
-  screen.drawRect(50, 10, 5, 5, "black");
+  mapScreen.drawRect(0, 15, 100, 1, "black");
+  mapScreen.drawRect(0, 30, 100, 1, "black");
+  mapScreen.drawRect(20, 14, 2, 2, "black");
+  mapScreen.drawRect(30, 13, 3, 3, "black");
+  mapScreen.drawRect(40, 12, 4, 4, "black");
+  mapScreen.drawRect(50, 10, 5, 5, "black");
 
-  game.map = new Map(screen.getImageData());
-  game.mapRender = screen.createImageData();
+  game.map = new Map(mapScreen.getImageData());
 
   game.options = {
     drawEdgePixelData: true
@@ -64,15 +64,16 @@ window.game = (function() {
     velocitySystem.apply_move_plan(player);
   }
 
+  function redrawMap() {
+    mapScreen.putImageData(game.map.getImageData());
+  }
+  redrawMap();
+
   function draw() {
-    // copy map background into mapRender
-    game.mapRender.data.set(game.map.getImageData().data);
+    spritesScreen.clear();
+    drawingSystem.drawDebugData(spritesScreen, game.options, game.map);
 
-    screen.putImageData(game.mapRender);
-
-    drawingSystem.drawDebugData(screen, game.options, game.map);
-
-    drawingSystem.draw(screen, player);
+    drawingSystem.draw(spritesScreen, player);
   }
 
   // define main game loop
@@ -85,14 +86,15 @@ window.game = (function() {
     window.requestAnimationFrame(loop);
   }
 
-  canvas.addEventListener("click", clickEvent => {
+  spritesCanvas.addEventListener("click", function(clickEvent) {
     log.debug(clickEvent);
-    const x = clickEvent.pageX - canvas.offsetLeft;
-    const y = clickEvent.pageY - canvas.offsetTop;
-    const mx = Math.round(x * canvas.width / canvas.offsetWidth);
-    const my = Math.round(y * canvas.height / canvas.offsetHeight);
+    const x = clickEvent.pageX - this.offsetLeft;
+    const y = clickEvent.pageY - this.offsetTop;
+    const mx = Math.round(x * this.width / this.offsetWidth);
+    const my = Math.round(y * this.height / this.offsetHeight);
     log.debug(`registered click at ${x},${y} (${mx},${my})`);
     game.map.explodeHole(mx, my, 10);
+    redrawMap();
   });
 
   // start the game running

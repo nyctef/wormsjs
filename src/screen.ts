@@ -60,4 +60,11 @@ export class Screen {
   putImageData = (data: ImageData) => {
     this._ctx.putImageData(data, 0, 0);
   };
+
+  clear = () => {
+    this._ctx.save();
+    this._ctx.setTransform(1, 0, 0, 1, 0, 0);
+    this._ctx.clearRect(0, 0, this._width, this._height);
+    this._ctx.restore;
+  };
 }

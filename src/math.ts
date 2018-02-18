@@ -1,8 +1,3 @@
-interface Point {
-  x: number;
-  y: number;
-}
-
 const noop = () => {};
 
 export function castLine(

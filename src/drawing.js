@@ -78,9 +78,4 @@ function DrawingSystem() {
   }
 }
 
-function AppearanceComponent(type, data) {
-  this.type = type;
-  this.data = data;
-}
-
-export { DrawingSystem, AppearanceComponent };
+export { DrawingSystem };

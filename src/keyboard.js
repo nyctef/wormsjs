@@ -4,10 +4,12 @@ var Keyboard = function() {
 
   window.onkeydown = function(e) {
     keyState[e.keyCode] = true;
+    return false;
   };
 
   window.onkeyup = function(e) {
     keyState[e.keyCode] = false;
+    return false;
   };
 
   this.isDown = function(keyCode) {

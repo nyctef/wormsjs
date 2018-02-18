@@ -78,6 +78,7 @@ window.game = (function() {
     screen.putImageData(game.mapRender);
 
     drawingSystem.drawDebugData!(screen, game);
+
     drawingSystem.draw!(screen, player);
   }
 

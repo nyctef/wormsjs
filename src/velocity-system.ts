@@ -178,7 +178,7 @@ export class VelocitySystem {
     if (!edgeBelow) {
       log.debug("starting to fall");
       ps.state = "FALLING";
-      if (this.frame_counter % 2 == 0) { v.dy = (v.dy + 1); }
+      v.dy += 10;
       if (v.dy > 60) {
         v.dy = 60;
       }

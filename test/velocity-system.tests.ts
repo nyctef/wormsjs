@@ -2,6 +2,7 @@ import { expect } from "chai";
 import * as log from "loglevel";
 import * as sinon from "sinon";
 
+import { VelocityComponent } from "../src/component-types";
 import { Entity } from "../src/entity";
 import { VelocitySystem } from "../src/velocity-system";
 
@@ -46,7 +47,7 @@ function TestMap(width: number, height: number, data: number[]) {
       if (x < 0 || x >= this._w || y < 0 || y >= this._h) {
         return { isEdge: true };
       }
-      return { isEdge: this._data[y * this._w + x] };
+      return { isEdge: !!this._data[y * this._w + x] };
     }
   };
 }
@@ -67,33 +68,36 @@ function testMapFactory(opts: { w?: number; h?: number; data?: number[] }) {
 }
 
 describe("VelocitySystem", () => {
-  beforeEach(function() {
+  let vs = (null as any) as VelocitySystem;
+  let entity = (null as any) as Entity;
+
+  beforeEach(() => {
     log.setLevel("warn");
-    this.vs = new VelocitySystem(log);
-    this.entity = TestEntity();
+    vs = new VelocitySystem(log);
+    entity = TestEntity();
   });
 
   describe("#set_move_plan", () => {
-    it("converts a velocity into a move plan in appropriate frames", function() {
+    it("converts a velocity into a move plan in appropriate frames", () => {
       const e = testEntityFactory({ vx: 1 });
 
-      this.vs.set_move_plan([e]);
+      vs.set_move_plan([e]);
 
       // with a velocity of 1, we want to move 1 on 1/60 frames
       expect(e.move_plan!.x).to.equal(1);
     });
-    it("does not set the move plan in other frames", function() {
+    it("does not set the move plan in other frames", () => {
       const e = testEntityFactory({ vx: 1 });
-      this.vs.start_frame();
+      vs.start_frame();
 
-      this.vs.set_move_plan([e]);
+      vs.set_move_plan([e]);
 
       // with a velocity of 1, we only want to actually move every 60 frames
       expect(e.move_plan!.x).to.equal(0);
     });
   });
   describe("#check_collisions", () => {
-    it("collides with a wall in front of the entity", function() {
+    it("collides with a wall in front of the entity", () => {
       //log.getLogger('VelocitySystem').setLevel('trace')
 
       const map = testMapFactory({
@@ -120,13 +124,13 @@ describe("VelocitySystem", () => {
         movx: 1
       });
 
-      this.vs.check_collisions(map, [e]);
+      vs.check_collisions(map, [e]);
 
       // we've hit a wall, so we alter the move-plan to be stopped
       expect(e.move_plan!.x).to.equal(0);
     });
 
-    it("doesn't collide with the top of the map if moving right (#23)", function() {
+    it("doesn't collide with the top of the map if moving right (#23)", () => {
       const map = testMapFactory({
         // prettier-ignore
         data: [
@@ -149,13 +153,13 @@ describe("VelocitySystem", () => {
         movx: 1
       });
 
-      this.vs.check_collisions(map, [e]);
+      vs.check_collisions(map, [e]);
 
       // there isn't a wall to the right, so we should continue rightwards
       expect(e.move_plan!.x).to.equal(1);
     });
 
-    it("falls to the ground if there is one pixel of space (#24)", function() {
+    it("falls to the ground if there is one pixel of space (#24)", () => {
       //log.getLogger('VelocitySystem').setLevel('trace')
       const map = testMapFactory({
         // prettier-ignore
@@ -177,13 +181,13 @@ describe("VelocitySystem", () => {
         posy: 2
       });
 
-      this.vs.check_collisions(map, [e]);
+      vs.check_collisions(map, [e]);
 
       // there is a gap below, so we should start falling
       expect(e.velocity!.dy).to.be.above(0);
     });
 
-    it("stops horizontal movement when hitting the ground", function() {
+    it("stops horizontal movement when hitting the ground", () => {
       //log.getLogger('VelocitySystem').setLevel('trace')
       const map = testMapFactory({
         // prettier-ignore
@@ -209,7 +213,7 @@ describe("VelocitySystem", () => {
         movy: 10
       });
 
-      this.vs.check_collisions(map, [e]);
+      vs.check_collisions(map, [e]);
 
       expect(e.velocity!.dy).to.equal(0);
       expect(e.velocity!.dx).to.equal(0);

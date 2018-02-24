@@ -1,6 +1,6 @@
 import * as loglevel from "loglevel";
 import { Entity } from "./entity";
-import { Map } from "./map";
+import { HasMapDataAt, Map } from "./map";
 import { castLine } from "./math";
 
 function sign(x: number) {
@@ -85,7 +85,11 @@ export class VelocitySystem {
 
   noop = (str: string) => {};
 
-  getCollisionPredicate = (map: Map, entity: Entity, doLog = this.noop) => {
+  getCollisionPredicate = (
+    map: HasMapDataAt,
+    entity: Entity,
+    doLog = this.noop
+  ) => {
     const size = entity.size;
     const shape = entity.shape;
     if (!size || !shape) {
@@ -119,7 +123,10 @@ export class VelocitySystem {
    * player_state/velocity might want to be set separately by a collision event
    * (since we want to collide more things than players)
    */
-  check_collisions = (map: Map, entities: Entity[]): CollisionEvent[] => {
+  check_collisions = (
+    map: HasMapDataAt,
+    entities: Entity[]
+  ): CollisionEvent[] => {
     const collisions: CollisionEvent[] = [];
 
     for (let i = 0; i < entities.length; i++) {

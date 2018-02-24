@@ -32,6 +32,10 @@ function getEdgePixelData(mapInput: ImageData, mapData: PixelData[]) {
   }
 }
 
+export interface HasMapDataAt {
+  mapDataAt: (x: number, y: number) => PixelData;
+}
+
 export class Map {
   _mapData: PixelData[];
   _imageData: ImageData;

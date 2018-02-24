@@ -1,6 +1,6 @@
 // TODO: contribute this to DefinitelyTyped
 
-import * as log from "loglevel";
+import "loglevel";
 
 declare module "loglevel" {
   interface Logger {

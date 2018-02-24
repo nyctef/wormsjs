@@ -19,13 +19,41 @@ declare global {
 
 const keyboard = new Keyboard(window);
 
-window.game = (function() {
-  const mapCanvas = document.getElementById("canvas-map") as HTMLCanvasElement;
+function createCanvas(
+  width: number,
+  height: number,
+  suffix: string,
+  zIndex: number
+) {
+  const template = document.createElement("template");
+  template.innerHTML = `<canvas id='canvas-${suffix}' width=${width} height=${height} style="z-index:${suffix}"></canvas>`;
+  return template.content.firstChild as HTMLCanvasElement;
+}
+
+function createCanvases(width: number, height: number) {
+  const canvasesArea = document.getElementById("canvases") as HTMLDivElement;
+  while (canvasesArea.lastChild) {
+    canvasesArea.removeChild(canvasesArea.lastChild);
+  }
+
+  const mapCanvas = createCanvas(width, height, "map", 0);
+  canvasesArea.appendChild(mapCanvas);
   const mapScreen = new Screen(mapCanvas);
-  const spritesCanvas = document.getElementById(
-    "canvas-sprites"
-  ) as HTMLCanvasElement;
+
+  const spritesCanvas = createCanvas(width, height, "sprites", 1);
+  canvasesArea.appendChild(spritesCanvas);
   const spritesScreen = new Screen(spritesCanvas);
+
+  return { mapScreen, spritesScreen, spritesCanvas };
+}
+
+function buildClimbingTest() {
+  const width = 400;
+  const height = 300;
+  const { mapScreen, spritesScreen, spritesCanvas } = createCanvases(
+    width,
+    height
+  );
 
   const game = {} as Game;
   game.log = log.getLogger("game");
@@ -36,13 +64,24 @@ window.game = (function() {
   const entities = [player];
 
   // define some starting geometry
-  // TODO: move this onto Map functions? or maybe a separate LoadMap thing?
   mapScreen.drawRect(0, 15, 100, 1, "black");
   mapScreen.drawRect(0, 30, 100, 1, "black");
   mapScreen.drawRect(20, 14, 2, 2, "black");
   mapScreen.drawRect(30, 13, 3, 3, "black");
   mapScreen.drawRect(40, 12, 4, 4, "black");
   mapScreen.drawRect(50, 10, 5, 5, "black");
+
+  return { game, entities, mapScreen, spritesScreen, spritesCanvas };
+}
+
+window.game = (function() {
+  const {
+    game,
+    entities,
+    mapScreen,
+    spritesScreen,
+    spritesCanvas
+  } = buildClimbingTest();
 
   game.map = new Map(mapScreen.getImageData());
 

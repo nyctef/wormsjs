@@ -32,10 +32,11 @@ window.game = (function() {
 
   log.debug(`game size: ${width},${height}`);
 
+  const player = Player(0, 0);
+  const entities = [player];
 
   // define some starting geometry
   // TODO: move this onto Map functions? or maybe a separate LoadMap thing?
-  const player = Player(0, 0);
   mapScreen.drawRect(0, 15, 100, 1, "black");
   mapScreen.drawRect(0, 30, 100, 1, "black");
   mapScreen.drawRect(20, 14, 2, 2, "black");
@@ -56,11 +57,13 @@ window.game = (function() {
   function update() {
     velocitySystem.start_frame();
 
-    updateKeyboard(keyboard, player);
-    playerControlSystem.update(player);
-    velocitySystem.set_move_plan(player);
-    velocitySystem.check_collisions(game.map, player);
-    velocitySystem.apply_move_plan(player);
+    for (const entity of entities) {
+      updateKeyboard(keyboard, entity);
+      playerControlSystem.update(entity);
+      velocitySystem.set_move_plan(entity);
+      velocitySystem.check_collisions(game.map, entity);
+      velocitySystem.apply_move_plan(entity);
+    }
   }
 
   function redrawMap() {
@@ -72,7 +75,9 @@ window.game = (function() {
     spritesScreen.clear();
     drawingSystem.drawDebugData(spritesScreen, game.options, game.map);
 
-    drawingSystem.draw(spritesScreen, player);
+    for (const entity of entities) {
+      drawingSystem.draw(spritesScreen, entity);
+    }
   }
 
   // define main game loop

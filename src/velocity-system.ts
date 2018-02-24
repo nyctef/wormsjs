@@ -230,6 +230,9 @@ export class VelocitySystem {
 
   /**
    * writes: player_state, velocity
+   *
+   * TODO: maybe move this function off velocity-system since we want
+   * reactions to collisions to be properly independent of the collision logic
    */
   handle_player_collisions = (
     entities: Entity[],

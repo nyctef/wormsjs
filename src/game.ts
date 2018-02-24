@@ -30,9 +30,8 @@ window.game = (function() {
   const game = {} as Game;
   game.log = log.getLogger("game");
 
-  game.size = { x: mapCanvas.width, y: mapCanvas.height };
+  log.debug(`game size: ${width},${height}`);
 
-  log.debug(`game size: ${game.size.x},${game.size.y}`);
 
   // define some starting geometry
   // TODO: move this onto Map functions? or maybe a separate LoadMap thing?

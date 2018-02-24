@@ -67,9 +67,9 @@ function testMapFactory(opts: { w?: number; h?: number; data?: number[] }) {
 
 describe("VelocitySystem", () => {
   beforeEach(function() {
-    this.vs = new VelocitySystem();
+    log.setLevel("warn");
+    this.vs = new VelocitySystem(log);
     this.entity = TestEntity();
-    log.getLogger("VelocitySystem").setLevel("warn");
   });
 
   describe("#set_move_plan", () => {

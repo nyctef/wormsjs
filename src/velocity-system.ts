@@ -3,8 +3,6 @@ import { Entity } from "./entity";
 import { Map } from "./map";
 import { castLine } from "./math";
 
-const log = loglevel.getLogger("VelocitySystem");
-
 function sign(x: number) {
   if (x < 0) {
     return -1;
@@ -17,8 +15,10 @@ function sign(x: number) {
 
 export class VelocitySystem {
   frame_counter: number;
+  log: log.Logger;
 
-  constructor() {
+  constructor(log: log.Logger) {
+    this.log = log.getLogger("VelocitySystem");
     this.frame_counter = 0;
   }
 
@@ -49,12 +49,12 @@ export class VelocitySystem {
     const dy = entity.velocity.dy;
     const sx = sign(dx);
     const sy = sign(dy);
-    if ((this.frame_counter % (60 / dx) | 0) === 0) {
+    if (((this.frame_counter % (60 / dx)) | 0) === 0) {
       entity.move_plan.x = sx;
     } else {
       entity.move_plan.x = 0;
     }
-    if ((this.frame_counter % (60 / dy) | 0) === 0) {
+    if (((this.frame_counter % (60 / dy)) | 0) === 0) {
       entity.move_plan.y = sy;
     } else {
       entity.move_plan.y = 0;
@@ -109,34 +109,34 @@ export class VelocitySystem {
     if (mp.x !== 0) {
       // todo: this assumes move_plan.x is 1 at most
       if (mp.x > 1) {
-        log.warn("don't know how to deal with a moveplan >1 px");
+        this.log.warn("don't know how to deal with a moveplan >1 px");
       }
       const maxClimbY = Math.max(0, pos.y - 2);
-      log.debug(
+      this.log.debug(
         `checking for a wall in front of us (position ${pos.x},${pos.y}) ` +
           `from ${pos.x + mp.x},${maxClimbY} ` +
           `to   ${pos.x + mp.x},${pos.y}`
       );
       const wallAhead = castLine(
-        this.getCollisionPredicate(map, entity, log.debug),
+        this.getCollisionPredicate(map, entity, this.log.debug),
         pos.x + mp.x,
         maxClimbY,
         pos.x + mp.x,
         pos.y,
-        log.debug
+        this.log.debug
       );
       if (wallAhead) {
-        log.debug(
+        this.log.debug(
           `checking slope ahead of entity: ${wallAhead.y} vs ${maxClimbY}`
         );
         if (wallAhead.y !== maxClimbY) {
-          log.debug(`climbing with move_plan.y = ${mp.y}`);
+          this.log.debug(`climbing with move_plan.y = ${mp.y}`);
           mp.y = wallAhead.y - pos.y - 1;
-          log.debug(
+          this.log.debug(
             `..set move_plan.y to ${mp.y} (=${wallAhead.y} - ${pos.y} - 1)`
           );
         } else {
-          log.debug("collision with wall");
+          this.log.debug("collision with wall");
           // a collision happened
           v.dx = 0;
           mp.x = 0;
@@ -163,7 +163,7 @@ export class VelocitySystem {
     if (mp.y > 0) {
       // TODO: should this check for FALLING instead? are those equivalent?
       if (edgeBelow) {
-        log.debug(
+        this.log.debug(
           `collision with ground at ${edgeBelow.x},${
             edgeBelow.y
           }: setting position to ${edgeBelow.x},${edgeBelow.y -
@@ -176,13 +176,13 @@ export class VelocitySystem {
     }
 
     if (!edgeBelow) {
-      log.debug("starting to fall");
+      this.log.debug("starting to fall");
       ps.state = "FALLING";
       v.dy += 10;
       if (v.dy > 60) {
         v.dy = 60;
       }
-      log.debug("set dy to " + v.dy);
+      this.log.debug("set dy to " + v.dy);
     }
   };
 

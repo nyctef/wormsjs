@@ -14,6 +14,7 @@ import * as log from "loglevel";
 declare global {
   interface Window {
     buildGame: () => Game;
+    setLogLevel: (level: log.LogLevelDesc) => void;
   }
 }
 
@@ -89,7 +90,7 @@ window.buildGame = function() {
     drawEdgePixelData: true
   };
 
-  const velocitySystem = new VelocitySystem();
+  const velocitySystem = new VelocitySystem(log);
   const playerControlSystem = PlayerControlSystem;
   const drawingSystem = DrawingSystem;
 
@@ -145,6 +146,10 @@ window.buildGame = function() {
 
   log.info(game);
   return game;
+};
+
+window.setLogLevel = (level: log.LogLevelDesc) => {
+  log.setLevel(level);
 };
 
 window.buildGame();

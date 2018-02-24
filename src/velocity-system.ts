@@ -64,12 +64,13 @@ export class VelocitySystem {
   noop = (str: string) => {};
 
   getCollisionPredicate = (map: Map, entity: Entity, doLog = this.noop) => {
+    const size = entity.size;
+    const shape = entity.shape;
+    if (!size || !shape) {
+      throw new Error("invalid entity for getCollisionPredicate");
+    }
+
     return (x0: number, y0: number) => {
-      const size = entity.size;
-      const shape = entity.shape;
-      if (!size || !shape) {
-        return false;
-      }
       for (let x = 0; x < size.width; x++) {
         for (let y = 0; y < size.height; y++) {
           if (

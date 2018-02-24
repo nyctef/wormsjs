@@ -40,6 +40,6 @@
     "webpack-dev-server": "^2.11.1"
   },
   "dependencies": {
-    "loglevel": "^1.4.1"
+    "loglevel": "^1.6.1"
   }
 }

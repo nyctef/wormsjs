@@ -10,6 +10,7 @@ import { Screen } from "./screen";
 import { VelocitySystem } from "./velocity-system";
 
 import * as log from "loglevel";
+import "../types/loglevel-extensions";
 
 declare global {
   interface Window {
@@ -149,7 +150,7 @@ window.buildGame = function() {
 };
 
 window.setLogLevel = (level: log.LogLevelDesc) => {
-  log.setLevel(level);
+  Object.values(log.getLoggers()).forEach(l => l.setLevel(level));
 };
 
 window.buildGame();

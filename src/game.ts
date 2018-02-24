@@ -11,6 +11,7 @@ import { VelocitySystem } from "./velocity-system";
 
 import * as log from "loglevel";
 import "../types/loglevel-extensions";
+import { Entity, EntityProps } from "./entity";
 
 declare global {
   interface Window {
@@ -49,6 +50,11 @@ function createCanvases(width: number, height: number) {
   return { mapScreen, spritesScreen, spritesCanvas };
 }
 
+function addEntity(entityList: Entity[], newEntity: EntityProps) {
+  const newId = entityList.length; // TODO: does reusing entity IDs/slots make sense?
+  entityList.push({ id: newId, ...newEntity });
+}
+
 function buildClimbingTest() {
   const width = 400;
   const height = 300;
@@ -63,7 +69,9 @@ function buildClimbingTest() {
   log.debug(`game size: ${width},${height}`);
 
   const player = Player(0, 0);
-  const entities = [{}, player];
+  const entities: Entity[] = [];
+  addEntity(entities, {});
+  addEntity(entities, player);
 
   // define some starting geometry
   mapScreen.drawRect(0, 15, 100, 1, "black");

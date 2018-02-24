@@ -7,6 +7,7 @@ import { VelocitySystem } from "../src/velocity-system";
 
 function TestEntity(): Entity {
   return {
+    id: 0,
     velocity: { dx: 0, dy: 0 },
     move_plan: { x: 0, y: 0 },
     player_state: { state: "FALLING" },

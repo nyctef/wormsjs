@@ -9,7 +9,7 @@ import {
   VelocityComponent
 } from "./component-types";
 
-export interface Entity {
+export interface EntityProps {
   ["keyboard_input"]?: KeyboardInputComponent;
   ["position"]?: PositionComponent;
   ["velocity"]?: VelocityComponent;
@@ -19,3 +19,5 @@ export interface Entity {
   ["shape"]?: ShapeComponent;
   ["appearance"]?: AppearanceComponent;
 }
+
+export type Entity = EntityProps & { id: number };

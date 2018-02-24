@@ -77,7 +77,7 @@ describe("VelocitySystem", () => {
     it("converts a velocity into a move plan in appropriate frames", function() {
       const e = testEntityFactory({ vx: 1 });
 
-      this.vs.set_move_plan(e);
+      this.vs.set_move_plan([e]);
 
       // with a velocity of 1, we want to move 1 on 1/60 frames
       expect(e.move_plan!.x).to.equal(1);
@@ -86,7 +86,7 @@ describe("VelocitySystem", () => {
       const e = testEntityFactory({ vx: 1 });
       this.vs.start_frame();
 
-      this.vs.set_move_plan(e);
+      this.vs.set_move_plan([e]);
 
       // with a velocity of 1, we only want to actually move every 60 frames
       expect(e.move_plan!.x).to.equal(0);
@@ -120,7 +120,7 @@ describe("VelocitySystem", () => {
         movx: 1
       });
 
-      this.vs.check_collisions(map, e);
+      this.vs.check_collisions(map, [e]);
 
       // we've hit a wall, so we alter the move-plan to be stopped
       expect(e.move_plan!.x).to.equal(0);
@@ -149,7 +149,7 @@ describe("VelocitySystem", () => {
         movx: 1
       });
 
-      this.vs.check_collisions(map, e);
+      this.vs.check_collisions(map, [e]);
 
       // there isn't a wall to the right, so we should continue rightwards
       expect(e.move_plan!.x).to.equal(1);
@@ -177,7 +177,7 @@ describe("VelocitySystem", () => {
         posy: 2
       });
 
-      this.vs.check_collisions(map, e);
+      this.vs.check_collisions(map, [e]);
 
       // there is a gap below, so we should start falling
       expect(e.velocity!.dy).to.be.above(0);
@@ -209,7 +209,7 @@ describe("VelocitySystem", () => {
         movy: 10
       });
 
-      this.vs.check_collisions(map, e);
+      this.vs.check_collisions(map, [e]);
 
       expect(e.velocity!.dy).to.equal(0);
       expect(e.velocity!.dx).to.equal(0);

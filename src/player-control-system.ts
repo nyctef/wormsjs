@@ -6,15 +6,19 @@ import {
 import { Entity } from "./entity";
 
 export const PlayerControlSystem = {
-  update: function(entity: Entity) {
-    const { player_state, keyboard_input, velocity } = entity;
-    if (!player_state || !keyboard_input || !velocity) {
-      return;
-    }
-    if (player_state.state === "STANDING") {
-      this.standing(keyboard_input, player_state);
-    } else if (player_state.state === "WALKING") {
-      this.walking(keyboard_input, player_state, velocity);
+  update: function(entities: Entity[]) {
+    for (let i = 0; i < entities.length; i++) {
+      const entity = entities[i];
+      const { player_state, keyboard_input, velocity } = entity;
+      if (!player_state || !keyboard_input || !velocity) {
+        return;
+      }
+
+      if (player_state.state === "STANDING") {
+        this.standing(keyboard_input, player_state);
+      } else if (player_state.state === "WALKING") {
+        this.walking(keyboard_input, player_state, velocity);
+      }
     }
   },
 

@@ -13,6 +13,20 @@ function sign(x: number) {
   return 1;
 }
 
+export type CollisionEvent =
+  | {
+      type: "WALKING_INTERRUPTED";
+      id: number;
+      velocity: { dx: number; dy: number };
+      wallAhead: { x: number; y: number };
+    }
+  | {
+      type: "FALLING_INTERRUPTED";
+      id: number;
+      velocity: { dx: number; dy: number };
+      edgeBelow: { x: number; y: number };
+    };
+
 export class VelocitySystem {
   frame_counter: number;
   log: log.Logger;
@@ -30,7 +44,7 @@ export class VelocitySystem {
    * reads: velocity
    * writes: move_plan
    */
-  set_move_plan = (entity: Entity) => {
+  set_move_plan = (entities: Entity[]) => {
     // vel 1 => vel +1 when fc % 60 == 0
     // vel 2 => vel +1 when fc % 30 == 0
     // vel 3 => vel +1 when fc % 20 == 0
@@ -42,22 +56,26 @@ export class VelocitySystem {
     // vel 90 => vel +1 when fc % 2 == 0 and vel +2 when fc % 2 == 1
     // will other systems start breaking if we move more than one pixel/frame?
 
-    if (!entity.move_plan || !entity.velocity) {
-      return;
-    }
-    const dx = entity.velocity.dx;
-    const dy = entity.velocity.dy;
-    const sx = sign(dx);
-    const sy = sign(dy);
-    if (((this.frame_counter % (60 / dx)) | 0) === 0) {
-      entity.move_plan.x = sx;
-    } else {
-      entity.move_plan.x = 0;
-    }
-    if (((this.frame_counter % (60 / dy)) | 0) === 0) {
-      entity.move_plan.y = sy;
-    } else {
-      entity.move_plan.y = 0;
+    for (let i = 0; i < entities.length; i++) {
+      const entity = entities[i];
+
+      if (!entity.move_plan || !entity.velocity) {
+        continue;
+      }
+      const dx = entity.velocity.dx;
+      const dy = entity.velocity.dy;
+      const sx = sign(dx);
+      const sy = sign(dy);
+      if (((this.frame_counter % (60 / dx)) | 0) === 0) {
+        entity.move_plan.x = sx;
+      } else {
+        entity.move_plan.x = 0;
+      }
+      if (((this.frame_counter % (60 / dy)) | 0) === 0) {
+        entity.move_plan.y = sy;
+      } else {
+        entity.move_plan.y = 0;
+      }
     }
   };
 
@@ -97,105 +115,129 @@ export class VelocitySystem {
    * player_state/velocity might want to be set separately by a collision event
    * (since we want to collide more things than players)
    */
-  check_collisions = (map: Map, entity: Entity) => {
-    const pos = entity.position;
-    const mp = entity.move_plan;
-    const ps = entity.player_state;
-    const v = entity.velocity;
+  check_collisions = (map: Map, entities: Entity[]): CollisionEvent[] => {
+    const collisions: CollisionEvent[] = [];
 
-    if (!pos || !mp || !ps || !v) {
-      return;
-    }
-
-    if (mp.x !== 0) {
-      // todo: this assumes move_plan.x is 1 at most
-      if (mp.x > 1) {
-        this.log.warn("don't know how to deal with a moveplan >1 px");
+    for (let i = 0; i < entities.length; i++) {
+      const entity = entities[i];
+      const pos = entity.position;
+      const mp = entity.move_plan;
+      const ps = entity.player_state;
+      const v = entity.velocity;
+      if (!pos || !mp || !ps || !v) {
+        continue;
       }
-      const maxClimbY = Math.max(0, pos.y - 2);
-      this.log.debug(
-        `checking for a wall in front of us (position ${pos.x},${pos.y}) ` +
-          `from ${pos.x + mp.x},${maxClimbY} ` +
-          `to   ${pos.x + mp.x},${pos.y}`
-      );
-      const wallAhead = castLine(
-        this.getCollisionPredicate(map, entity, this.log.debug),
-        pos.x + mp.x,
-        maxClimbY,
-        pos.x + mp.x,
-        pos.y,
-        this.log.debug
-      );
-      if (wallAhead) {
+
+      if (mp.x !== 0) {
+        // todo: this assumes move_plan.x is 1 at most
+        if (mp.x > 1) {
+          this.log.warn("don't know how to deal with a moveplan >1 px");
+        }
+        // TODO: this wallAhead/maxClimb logic is very player-specific;
+        // might need to pull out into an event and handle separately
+        const maxClimbY = Math.max(0, pos.y - 2);
         this.log.debug(
-          `checking slope ahead of entity: ${wallAhead.y} vs ${maxClimbY}`
+          `checking for a wall in front of us (position ${pos.x},${pos.y}) ` +
+            `from ${pos.x + mp.x},${maxClimbY} ` +
+            `to   ${pos.x + mp.x},${pos.y}`
         );
-        if (wallAhead.y !== maxClimbY) {
-          this.log.debug(`climbing with move_plan.y = ${mp.y}`);
-          mp.y = wallAhead.y - pos.y - 1;
+        const wallAhead = castLine(
+          this.getCollisionPredicate(map, entity, this.log.debug),
+          pos.x + mp.x,
+          maxClimbY,
+          pos.x + mp.x,
+          pos.y,
+          this.log.debug
+        );
+        if (wallAhead) {
           this.log.debug(
-            `..set move_plan.y to ${mp.y} (=${wallAhead.y} - ${pos.y} - 1)`
+            `checking slope ahead of entity: ${wallAhead.y} vs ${maxClimbY}`
           );
-        } else {
-          this.log.debug("collision with wall");
-          // a collision happened
-          v.dx = 0;
-          mp.x = 0;
+          if (wallAhead.y !== maxClimbY) {
+            this.log.debug(`climbing with move_plan.y = ${mp.y}`);
+            mp.y = wallAhead.y - pos.y - 1;
+            this.log.debug(
+              `..set move_plan.y to ${mp.y} (=${wallAhead.y} - ${pos.y} - 1)`
+            );
+          } else {
+            this.log.debug("collision with wall");
+            collisions.push({
+              type: "WALKING_INTERRUPTED",
+              id: entity.id,
+              velocity: v,
+              wallAhead
+            });
+            // a collision happened
+            v.dx = 0;
+            mp.x = 0;
+          }
         }
       }
-    }
 
-    // todo: this doesn't cope with falling faster than 1px per frame
-    const x0 = pos.x,
-      x1 = pos.x;
-    const y0 = pos.y,
-      y1 = pos.y + 1;
-    //log.debug(`checking for an edge below us (position ${pos.x},${pos.y}) from ${x0},${y0} to ${x1},${y1}`)
-    const edgeBelow = castLine(
-      this.getCollisionPredicate(map, entity),
-      x0,
-      y0,
-      x1,
-      y1
-    );
-    if (edgeBelow) {
-      //log.debug(`edgeBelow found at ${edgeBelow.x},${edgeBelow.y}`)
-    }
-    if (mp.y > 0) {
-      // TODO: should this check for FALLING instead? are those equivalent?
+      // todo: this doesn't cope with falling faster than 1px per frame
+      const x0 = pos.x,
+        x1 = pos.x;
+      const y0 = pos.y,
+        y1 = pos.y + 1;
+      //log.debug(`checking for an edge below us (position ${pos.x},${pos.y}) from ${x0},${y0} to ${x1},${y1}`)
+      const edgeBelow = castLine(
+        this.getCollisionPredicate(map, entity),
+        x0,
+        y0,
+        x1,
+        y1
+      );
       if (edgeBelow) {
-        this.log.debug(
-          `collision with ground at ${edgeBelow.x},${
-            edgeBelow.y
-          }: setting position to ${edgeBelow.x},${edgeBelow.y -
-            1}, vy to 0 and mpy to 0`
-        );
-        v.dy = v.dx = 0;
-        mp.y = 0;
-        ps.state = "STANDING";
+        //log.debug(`edgeBelow found at ${edgeBelow.x},${edgeBelow.y}`)
+      }
+      if (mp.y > 0) {
+        // TODO: should this check for FALLING instead? are those equivalent?
+        if (edgeBelow) {
+          this.log.debug(
+            `collision with ground at ${edgeBelow.x},${
+              edgeBelow.y
+            }: setting position to ${edgeBelow.x},${edgeBelow.y -
+              1}, vy to 0 and mpy to 0`
+          );
+          collisions.push({
+            type: "FALLING_INTERRUPTED",
+            id: entity.id,
+            velocity: v,
+            edgeBelow
+          });
+          v.dy = v.dx = 0;
+          mp.y = 0;
+          ps.state = "STANDING";
+        }
+      }
+
+      if (!edgeBelow) {
+        this.log.debug("starting to fall");
+        ps.state = "FALLING";
+        v.dy += 10;
+        if (v.dy > 60) {
+          v.dy = 60;
+        }
+        this.log.debug("set dy to " + v.dy);
       }
     }
 
-    if (!edgeBelow) {
-      this.log.debug("starting to fall");
-      ps.state = "FALLING";
-      v.dy += 10;
-      if (v.dy > 60) {
-        v.dy = 60;
-      }
-      this.log.debug("set dy to " + v.dy);
-    }
+    return collisions;
   };
 
   /**
    * reads: move_plan
    * writes: position
    */
-  apply_move_plan = (entity: Entity) => {
-    if (!entity.position || !entity.move_plan) {
-      return;
+  apply_move_plan = (entities: Entity[]) => {
+    for (let i = 0; i < entities.length; i++) {
+      const entity = entities[i];
+      if (!entity.position || !entity.move_plan) {
+        continue;
+      }
+
+      entity.position.x += entity.move_plan.x;
+      entity.position.y += entity.move_plan.y;
     }
-    entity.position.x += entity.move_plan.x;
-    entity.position.y += entity.move_plan.y;
   };
 }

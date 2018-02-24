@@ -106,13 +106,11 @@ window.buildGame = function() {
   function update() {
     velocitySystem.start_frame();
 
-    for (const entity of entities) {
-      updateKeyboard(keyboard, entity);
-      playerControlSystem.update(entity);
-      velocitySystem.set_move_plan(entity);
-      velocitySystem.check_collisions(game.map, entity);
-      velocitySystem.apply_move_plan(entity);
-    }
+    updateKeyboard(keyboard, entities);
+    playerControlSystem.update(entities);
+    velocitySystem.set_move_plan(entities);
+    const collisions = velocitySystem.check_collisions(game.map, entities);
+    velocitySystem.apply_move_plan(entities);
   }
 
   function redrawMap() {

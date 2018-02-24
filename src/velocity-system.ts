@@ -25,6 +25,10 @@ export type CollisionEvent =
       id: number;
       velocity: { dx: number; dy: number };
       edgeBelow: { x: number; y: number };
+    }
+  | {
+      type: "STARTING_TO_FALL";
+      id: number;
     };
 
 export class VelocitySystem {
@@ -209,10 +213,12 @@ export class VelocitySystem {
           mp.y = 0;
           ps.state = "STANDING";
         }
-      }
-
-      if (!edgeBelow) {
+      } else if (!edgeBelow) {
         this.log.debug("starting to fall");
+        collisions.push({
+          type: "STARTING_TO_FALL",
+          id: entity.id
+        });
         ps.state = "FALLING";
         v.dy += 10;
         if (v.dy > 60) {

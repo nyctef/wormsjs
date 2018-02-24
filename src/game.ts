@@ -131,8 +131,8 @@ window.buildGame = function() {
 
   spritesCanvas.addEventListener("click", function(clickEvent) {
     log.debug(clickEvent);
-    const x = clickEvent.pageX - this.offsetLeft;
-    const y = clickEvent.pageY - this.offsetTop;
+    const x = clickEvent.offsetX;
+    const y = clickEvent.offsetY;
     const mx = Math.round(x * this.width / this.offsetWidth);
     const my = Math.round(y * this.height / this.offsetHeight);
     log.debug(`registered click at ${x},${y} (${mx},${my})`);

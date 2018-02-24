@@ -13,7 +13,7 @@ import * as log from "loglevel";
 
 declare global {
   interface Window {
-    game: Game;
+    buildGame: () => Game;
   }
 }
 
@@ -74,7 +74,7 @@ function buildClimbingTest() {
   return { game, entities, mapScreen, spritesScreen, spritesCanvas };
 }
 
-window.game = (function() {
+window.buildGame = function() {
   const {
     game,
     entities,
@@ -145,4 +145,6 @@ window.game = (function() {
 
   log.info(game);
   return game;
-})();
+};
+
+window.buildGame();

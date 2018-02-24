@@ -2,6 +2,10 @@
 
 <head>
   <style>
+    #canvases {
+      position: relative;
+    }
+
     canvas {
       image-rendering: optimizeSpeed;
       image-rendering: -moz-crisp-edges;
@@ -21,6 +25,7 @@
 </head>
 
 <body style='margin:0; padding:0; width:100%'>
+  <a href='#' onclick="buildGame()">build game</a>
   <div id="canvases">
   </div>
   <script src='dist/bundle.js'></script>

@@ -116,8 +116,9 @@ export class VelocitySystem {
   };
 
   /**
-   * reads: position, move_plan
-   * writes: move_plan, player_state, velocity
+   * reads: position, move_plan, velocity
+   * writes: move_plan
+   * returns: collisions
    *
    * TODO: can we simplify the above a bit?
    * player_state/velocity might want to be set separately by a collision event
@@ -133,9 +134,8 @@ export class VelocitySystem {
       const entity = entities[i];
       const pos = entity.position;
       const mp = entity.move_plan;
-      const ps = entity.player_state;
       const v = entity.velocity;
-      if (!pos || !mp || !ps || !v) {
+      if (!pos || !mp || !v) {
         continue;
       }
 
@@ -178,8 +178,6 @@ export class VelocitySystem {
               velocity: v,
               wallAhead
             });
-            // a collision happened
-            v.dx = 0;
             mp.x = 0;
           }
         }
@@ -216,9 +214,7 @@ export class VelocitySystem {
             velocity: v,
             edgeBelow
           });
-          v.dy = v.dx = 0;
           mp.y = 0;
-          ps.state = "STANDING";
         }
       } else if (!edgeBelow) {
         this.log.debug("starting to fall");
@@ -226,16 +222,47 @@ export class VelocitySystem {
           type: "STARTING_TO_FALL",
           id: entity.id
         });
-        ps.state = "FALLING";
-        v.dy += 10;
-        if (v.dy > 60) {
-          v.dy = 60;
-        }
-        this.log.debug("set dy to " + v.dy);
       }
     }
 
     return collisions;
+  };
+
+  /**
+   * writes: player_state, velocity
+   */
+  handle_player_collisions = (
+    entities: Entity[],
+    collisions: CollisionEvent[]
+  ) => {
+    for (let c = 0; c < collisions.length; c++) {
+      const collision = collisions[c];
+      const entity = entities[collision.id];
+      const { velocity, player_state } = entity;
+      if (!velocity || !player_state) {
+        continue;
+      }
+
+      switch (collision.type) {
+        case "STARTING_TO_FALL":
+          // TODO probably want acceleration here
+          velocity.dy += 10;
+          if (velocity.dy > 60) {
+            velocity.dy = 60;
+          }
+          player_state.state = "FALLING";
+          break;
+
+        case "FALLING_INTERRUPTED":
+          velocity.dy = velocity.dx = 0;
+          player_state.state = "STANDING";
+          break;
+
+        case "WALKING_INTERRUPTED":
+          velocity.dx = 0;
+          break;
+      }
+    }
   };
 
   /**

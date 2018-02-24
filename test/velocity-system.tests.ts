@@ -181,7 +181,9 @@ describe("VelocitySystem", () => {
         posy: 2
       });
 
-      vs.check_collisions(map, [e]);
+      // TODO do we want separate tests for these two methods?
+      const collisions = vs.check_collisions(map, [e]);
+      vs.handle_player_collisions([e], collisions);
 
       // there is a gap below, so we should start falling
       expect(e.velocity!.dy).to.be.above(0);
@@ -213,7 +215,9 @@ describe("VelocitySystem", () => {
         movy: 10
       });
 
-      vs.check_collisions(map, [e]);
+      // TODO do we want separate tests for these two methods?
+      const collisions = vs.check_collisions(map, [e]);
+      vs.handle_player_collisions([e], collisions);
 
       expect(e.velocity!.dy).to.equal(0);
       expect(e.velocity!.dx).to.equal(0);

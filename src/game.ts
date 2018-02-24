@@ -110,6 +110,7 @@ window.buildGame = function() {
     playerControlSystem.update(entities);
     velocitySystem.set_move_plan(entities);
     const collisions = velocitySystem.check_collisions(game.map, entities);
+    velocitySystem.handle_player_collisions(entities, collisions);
     velocitySystem.apply_move_plan(entities);
   }
 

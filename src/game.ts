@@ -61,7 +61,7 @@ function buildClimbingTest() {
   log.debug(`game size: ${width},${height}`);
 
   const player = Player(0, 0);
-  const entities = [player];
+  const entities = [{}, player];
 
   // define some starting geometry
   mapScreen.drawRect(0, 15, 100, 1, "black");
